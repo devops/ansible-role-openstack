@@ -1,0 +1,89 @@
+- name: base
+  src: https://github.com/devops/ansible-role-base.git
+  scm: git
+  version: 1.0.0
+  path: roles/
+
+- name: ceph-common
+  src: https://github.com/devops/ansible-role-ceph-common.git
+  scm: git
+  version: 0.9.0
+  path: roles/
+
+- name: ceph-mon
+  src: https://github.com/devops/ansible-role-ceph-mon.git
+  scm: git
+  version: 0.9.0
+  path: roles/
+
+- name: ceph-osd
+  src: https://github.com/devops/ansible-role-ceph-osd.git
+  scm: git
+  version: 0.9.0
+  path: roles/
+
+ - name: mariadb-galera
+   src: https://github.com/devops/ansible-role-mariadb-galera.git
+   scm: git
+   version: 0.9.0
+   path: roles/
+
+ - name: memcached
+   src: https://github.com/devops/ansible-role-memcached.git
+   scm: git
+   version: 0.9.0
+   path: roles/
+
+- name: network
+  src: https://github.com/devops/ansible-role-network.git
+  scm: git
+  version: 1.0.0
+  path: roles/
+
+- name: ntp
+  src: https://github.com/devops/ansible-role-ntp.git
+  scm: git
+  version: 1.0.0
+  path: roles/
+
+- name: openstack-common
+  src: https://github.com/devops/ansible-role-openstack-common.git
+  scm: git
+  version: 0.9.0
+  path: roles/
+
+- name: openstack-controller
+  src: https://github.com/devops/ansible-role-openstack-controller.git
+  scm: git
+  version: 0.9.0
+  path: roles/
+
+- name: openstack-compute
+  src: https://github.com/devops/ansible-role-openstack-compute.git
+  scm: git
+  version: 0.9.0
+  path: roles/
+
+- name: repo-lan
+  src: https://github.com/devops/ansible-role-repo-lan.git
+  scm: git
+  version: 1.0.0
+  path: roles/
+
+- name: repo-epel
+  src: https://github.com/devops/ansible-role-repo-epel.git
+  scm: git
+  version: 1.0.0
+  path: roles/
+
+- name: rabbitmq
+  src: https://github.com/devops/ansible-role-rabbitmq.git
+  scm: git
+  version: 0.9.0
+  path: roles/
+
+- name: sshd
+  src: https://github.com/devops/ansible-role-sshd.git
+  scm: git
+  version: 1.0.0
+  path: roles/

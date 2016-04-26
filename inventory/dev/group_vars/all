@@ -1,0 +1,18 @@
+---
+# repo-lan
+repo_lan_repos:
+  - { name: "base", baseurl: "http://172.23.11.2/repo/openstack/centos/7.2/os/x86_64/" }
+  - { name: "extras", baseurl: "http://172.23.11.2/repo/centos/7.2/extras/x86_64/" }
+  - { name: "epel", baseurl: "http://172.23.11.2/repo/openstack/epel/7/x86_64/" }
+
+# base
+base_nameserver_servers:
+  - 114.114.114.114
+
+# ntp
+ntp_servers:
+  - ntp.fudan.edu.cn prefer
+  - ntp.api.bz
+
+# sshd
+sshd_setup_firewall: false

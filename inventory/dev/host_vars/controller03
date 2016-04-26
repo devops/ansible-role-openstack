@@ -1,0 +1,7 @@
+---
+host_name: controller03
+admin_ip: 172.23.192.113
+admin_ip_gateway: 172.23.255.254
+public_ip: 192.168.8.13
+mgmt_ip: 10.0.1.13
+sp_ip: 10.0.2.13

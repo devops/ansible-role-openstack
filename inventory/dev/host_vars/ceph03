@@ -1,0 +1,6 @@
+---
+host_name: ceph03-dev
+admin_ip: 172.23.192.133
+admin_ip_gateway: 172.23.255.254
+sp_ip: 10.0.2.33
+sc_ip: 10.0.3.33

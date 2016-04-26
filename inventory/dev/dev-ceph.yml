@@ -1,0 +1,41 @@
+---
+# ceph node
+
+## Servers Network Configure
+- name: Servers Network Configure.
+  hosts: ceph
+  remote_user: root
+  roles:
+    - role: network
+
+## Servers Base Configure
+- name: Init the system.
+  hosts: ceph
+  remote_user: root
+  roles:
+    - role: repo-lan
+    - role: sshd
+    - role: base
+    - role: ntp
+    
+## ceph-common
+- name: Ceph Node Base Configure.
+  hosts: ceph
+  remote_user: root
+  roles:
+    - role: ceph-common
+
+## ceph-mon
+- name: Ceph Mon Node Configure.
+  hosts: ceph-mon
+  remote_user: root
+  roles:
+    - role: ceph-mon
+
+## ceph-osd
+- name: Ceph OSD Node Configure.
+  hosts: ceph-osd
+  serial: 1
+  remote_user: root
+  roles:
+    - role: ceph-osd

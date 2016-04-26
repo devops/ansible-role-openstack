@@ -1,0 +1,6 @@
+---
+host_name: compute02
+admin_ip: 172.23.192.122
+admin_ip_gateway: 172.23.255.254
+mgmt_ip: 10.0.1.22
+sp_ip: 10.0.2.22

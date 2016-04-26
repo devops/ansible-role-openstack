@@ -1,0 +1,54 @@
+---
+# openstack controller node
+
+## Servers Network Configure
+- name: Servers Network Configure.
+  hosts: controller
+  remote_user: root
+  roles:
+    - role: network
+
+## Servers Base Configure
+- name: Init the system.
+  hosts: controller
+  remote_user: root
+  roles:
+    - role: repo-lan
+    - role: sshd
+    - role: base
+    - role: ntp
+    
+## openstack-common
+- name: OpenStack Controller Node Base Configure.
+  hosts: controller
+  remote_user: root
+  roles:
+    - role: openstack-common
+      
+## MariaDB-galera
+- name: Install MariaDB Galera.
+  hosts: controller
+  remote_user: root
+  roles:
+    - role: mariadb-galera
+      
+## RabbitMQ
+- name: Install RabbitMQ.
+  hosts: controller
+  remote_user: root
+  roles:
+    - role: rabbitmq
+
+## Memcached
+- name: Install Memcached.
+  hosts: controller
+  remote_user: root
+  roles:
+    - role: memcached
+
+## ha && keystone && glance && nova && neutron && horizon && cinder
+- name: Install OpenStack Controller.
+  hosts: controller
+  remote_user: root
+  roles:
+    - role: openstack-controller

@@ -1,0 +1,15 @@
+---
+network_ethernet_interfaces:
+  - device: eth0
+    bootproto: static
+    address: "{{ admin_ip }}"
+    netmask: 255.255.192.0
+    gateway: "{{ admin_ip_gateway }}"
+  - device: eth1
+    bootproto: static
+    address: "{{ mgmt_ip }}"
+  - device: eth2
+    bootproto: static
+  - device: eth3
+    bootproto: static
+    address: "{{ sp_ip }}"
