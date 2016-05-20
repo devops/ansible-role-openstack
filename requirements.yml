@@ -22,17 +22,17 @@
   version: 0.9.0
   path: roles/
 
- - name: mariadb-galera
-   src: https://github.com/devops/ansible-role-mariadb-galera.git
-   scm: git
-   version: 0.9.0
-   path: roles/
+- name: mariadb-galera
+  src: https://github.com/devops/ansible-role-mariadb-galera.git
+  scm: git
+  version: 0.9.0
+  path: roles/
 
- - name: memcached
-   src: https://github.com/devops/ansible-role-memcached.git
-   scm: git
-   version: 0.9.0
-   path: roles/
+- name: memcached
+  src: https://github.com/devops/ansible-role-memcached.git
+  scm: git
+  version: 0.9.0
+  path: roles/
 
 - name: network
   src: https://github.com/devops/ansible-role-network.git
