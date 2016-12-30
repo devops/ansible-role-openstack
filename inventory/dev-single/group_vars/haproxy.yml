@@ -1,0 +1,211 @@
+---
+haproxy_global:
+  chroot: /var/lib/haproxy
+  user: haproxy
+  group: haproxy
+  daemon: true
+  maxconn: 4000
+  pidfile: /var/run/haproxy.pid
+
+haproxy_defaults:
+  log:
+    - address: /dev/log
+      facility: local1
+      level: notice
+  maxconn: 4000
+  options:
+    - redispatch
+  retries: 3
+  timeout:
+      - param: 'http-request'
+        value: '10s'
+      - param: 'queue'
+        value: '1m'
+      - param: 'connect'
+        value: '10s'
+      - param: 'client'
+        value: '1m'
+      - param: 'server'
+        value: '1m'
+      - param: 'check'
+        value: '10s'
+
+haproxy_stats:
+  name: 'Stats'
+  bind:
+    - "{{ ansible_default_ipv4.address }}:8888"
+  stats:
+    enabled: True
+    hide_version: true
+    uri: /stats
+    realm: Welcome\ to\ haproxy\ monitor
+    auth: admin:admin
+    refresh: 5s
+
+haproxy_listen:
+  - name: "dashboard_cluster_80"
+    bind:
+      - "{{ openstack_controller_host }}:80"
+    balance: "source"
+    options:
+      - tcpka
+      - httpchk
+      - tcplog
+    servers:
+      - name: "controller1"
+        ip: "{{ hostvars.controller01.mgmt_ip }}"
+        port: "80"
+        params:
+         - check inter 2000 rise 2 fall 5
+
+  - name: "glance_api_cluster"
+    bind:
+      - "{{ openstack_controller_host }}:9292"
+      - "{{ openstack_public_vip }}:9292"
+    balance: "source"
+    options:
+      - tcpka
+      - httpchk
+      - tcplog
+    servers:
+      - name: "controller1"
+        ip: "{{ hostvars.controller01.mgmt_ip }}"
+        port: "9292"
+        params:
+         - check inter 2000 rise 2 fall 5
+
+  - name: "glance_registry_cluster"
+    bind:
+      - "{{ openstack_controller_host }}:9191"
+    balance: "source"
+    options:
+      - tcpka
+      - tcplog
+    servers:
+      - name: "controller1"
+        ip: "{{ hostvars.controller01.mgmt_ip }}"
+        port: "9191"
+        params:
+         - check inter 2000 rise 2 fall 5
+
+  - name: "keystone_admin_cluster"
+    bind:
+      - "{{ openstack_controller_host }}:35357"
+    balance: "source"
+    options:
+      - tcpka
+      - httpchk
+      - tcplog
+    servers:
+      - name: "controller1"
+        ip: "{{ hostvars.controller01.mgmt_ip }}"
+        port: "35357"
+        params:
+         - check inter 2000 rise 2 fall 5
+
+  - name: "keystone_public_internal_cluster"
+    bind:
+      - "{{ openstack_controller_host }}:5000"
+      - "{{ openstack_public_vip }}:5000"
+    balance: "source"
+    options:
+      - tcpka
+      - httpchk
+      - tcplog
+    servers:
+      - name: "controller1"
+        ip: "{{ hostvars.controller01.mgmt_ip }}"
+        port: "5000"
+        params:
+         - check inter 2000 rise 2 fall 5
+
+  - name: "nova_ec2_api_cluster"
+    bind:
+      - "{{ openstack_controller_host }}:8773"
+      - "{{ openstack_public_vip }}:8773"
+    balance: "source"
+    options:
+      - tcpka
+      - tcplog
+    servers:
+      - name: "controller1"
+        ip: "{{ hostvars.controller01.mgmt_ip }}"
+        port: "8773"
+        params:
+         - check inter 2000 rise 2 fall 5
+
+  - name: "nova_compute_api_cluster"
+    bind:
+      - "{{ openstack_controller_host }}:8774"
+      - "{{ openstack_public_vip }}:8774"
+    balance: "source"
+    options:
+      - tcpka
+      - httpchk
+      - tcplog
+    servers:
+      - name: "controller1"
+        ip: "{{ hostvars.controller01.mgmt_ip }}"
+        port: "8774"
+        params:
+         - check inter 2000 rise 2 fall 5
+
+  - name: "nova_metadata_api_cluster"
+    bind:
+      - "{{ openstack_controller_host }}:8775"
+    balance: "source"
+    options:
+      - tcpka
+      - tcplog
+    servers:
+      - name: "controller1"
+        ip: "{{ hostvars.controller01.mgmt_ip }}"
+        port: "8775"
+        params:
+         - check inter 2000 rise 2 fall 5
+
+  - name: "cinder_api_cluster"
+    bind:
+      - "{{ openstack_controller_host }}:8776"
+      - "{{ openstack_public_vip }}:8776"
+    balance: "source"
+    options:
+      - tcpka
+      - httpchk
+      - tcplog
+    servers:
+      - name: "controller1"
+        ip: "{{ hostvars.controller01.mgmt_ip }}"
+        port: "8776"
+        params:
+         - check inter 2000 rise 2 fall 5
+  - name: "spice_cluster"
+    bind:
+      - "{{ openstack_controller_host }}:6080"
+      - "{{ openstack_public_vip }}:6080"
+    balance: "source"
+    options:
+      - tcpka
+      - tcplog
+    servers:
+      - name: "controller1"
+        ip: "{{ hostvars.controller01.mgmt_ip }}"
+        port: "6080"
+        params:
+         - check inter 2000 rise 2 fall 5
+
+  - name: "neutron_api_cluster"
+    bind:
+      - "{{ openstack_controller_host }}:9696"
+      - "{{ openstack_public_vip }}:9696"
+    balance: "source"
+    options:
+      - tcpka
+      - httpchk
+      - tcplog
+    servers:
+      - name: "controller1"
+        ip: "{{ hostvars.controller01.mgmt_ip }}"
+        port: "9696"
+        params:
+         - check inter 2000 rise 2 fall 5

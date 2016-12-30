@@ -1,36 +1,49 @@
 ---
-# MariaDB
-mariadb_repo: False
-galera_wsrep_cluster_address: ["{{ hostvars[groups['controller'][0]]['mgmt_ip'] }}", "{{ hostvars[groups['controller'][1]]['mgmt_ip'] }}", "{{ hostvars[groups['controller'][2]]['mgmt_ip'] }}"]
-galera_bootstrap_node: "{{ hostvars[groups['controller'][0]]['mgmt_ip'] }}"
-mariadb_root_username: root
-mariadb_root_password: root
-mariadb_users:
-  - { name: "root", host: "%", password: "root", priv: "*.*:GRANT,ALL" }
-galera_clustercheck_enable: true
-galera_clustercheck_username: clustercheck
-galera_clustercheck_password: clustercheck
-galera_mgmt_nic: "eth1"
 
-# RabbitMQ
-rabbitmq_cluster: True
-rabbitmq_cluster_master: "{{ hostvars[groups['controller'][0]]['ansible_hostname'] }}"
-rabbitmq_users:
-  - user: openstack
-    password: openstack
-    vhost: /
-    configure_priv: .*
-    read_priv: .*
-    write_priv: .*
+## database
+openstack_db_host: "{{ openstack_controller_host }}"
+openstack_db_root_user: "{{ mariadb_users[0].name }}"
+openstack_db_root_password: "{{ mariadb_users[0].password }}"
 
-# Memcached
-memcached_listen_ip: "{{ mgmt_ip }}"
-memcached_log_enable: True
-    
+## network
+openstack_admin_vip: "{{ openstack_controller_host }}"
+openstack_internal_vip: "{{ openstack_controller_host }}"
+openstack_public_vip: "172.23.40.11"
+
+## memcached
+memcached_port: 11211
+openstack_memcached_servers: "{% for host in groups['memcached'] %}{{ hostvars[host]['mgmt_ip'] }}:{{ memcached_port }}{% if not loop.last %},{% endif %}{% endfor %}"
+
+## RabbitMQ
+#openstack_rabbit_host: "{{ openstack_controller_host }}"
+openstack_rabbit_hosts: "{% for host in groups['rabbitmq'] %}{{ hostvars[host]['mgmt_ip'] }}:5672{% if not loop.last %},{% endif %}{% endfor %}"
+
+## keystone auth
+openstack_keystone_auth_uri: "http://{{ openstack_controller_host }}:5000"
+openstack_keystone_auth_url: "http://{{ openstack_controller_host }}:35357"
+openstack_keystone_admin_token: "openstack"
+openstack_admin_user: "admin"
+openstack_admin_password: "openstack"
+
+## other
+openstack_controller_host: "10.0.1.10"
+
+# corosync
+openstack_corosync_bindnetaddr: "{{ openstack_internal_net }}"
+openstack_corosync_mcastaddr: "239.255.42.1"
+openstack_corosync_mcastport: 5405
+openstack_hacluster_password: "openstack"
+
 # openstack-common
+openstack_repos:
+  - name: centos-openstack-liberty
+    description: CentOS-7 - OpenStack liberty
+    baseurl: http://mirrors.aliyun.com/centos/7/cloud/x86_64/openstack-liberty/
+    gpgcheck: no
+
 ## ceph
-openstack_ceph_enable: True
-ceph_repo_baseurl: "http://172.23.11.2/repo/ceph/rpm-firefly/el7/"
+
+ceph_repo_baseurl: "http://mirrors.aliyun.com/ceph/rpm-firefly/el7/"
 ceph_fsid: "cc546e6b-52ab-456b-8283-adff1cd61bce"
 openstack_keys:
   - { name: glance, owner: "glance" }
@@ -39,70 +52,20 @@ openstack_keys:
 
 openstack_libvirt_secret_uuid: "c27421a6-c4ce-4236-b96c-e4ac19c53a7d"
 
-openstack_repo_baseurl: "http://172.23.11.2/mirrors/centos/7/cloud/$basearch/openstack-liberty/"
-
 # openstack controller && compute
-openstack_controller_host: "10.0.1.10"
 openstack_internal_net: "10.0.1.0"
 openstack_internal_netmask: "24"
-openstack_admin_vip: "{{ openstack_controller_host }}"
-openstack_internal_vip: "{{ openstack_controller_host }}"
-openstack_public_vip: "192.168.8.10"
 openstack_public_netmask: "24"
 
-## database
-openstack_database_host: "{{ openstack_controller_host }}"
-openstack_database_root: "{{ mariadb_users[0].name }}"
-openstack_database_root_password: "{{ mariadb_users[0].password }}"
+## auth env
+token_auth_env:
+  OS_TOKEN: "{{ openstack_keystone_admin_token }}"
+  OS_URL: "http://{{ openstack_controller_host }}:35357/v3"
+  OS_IDENTITY_API_VERSION: "3"
 
-## rabbit
-#openstack_rabbit_host: "{{ openstack_controller_host }}"
-openstack_rabbit_hosts: "{{ hostvars.controller01.mgmt_ip }}:5672,{{ hostvars.controller02.mgmt_ip }}:5672,{{ hostvars.controller03.mgmt_ip }}:5672"
-openstack_rabbit_userid: "{{ rabbitmq_users[0].user}}"
-openstack_rabbit_password: "{{ rabbitmq_users[0].password}}"
-
-## memcached
-openstack_memcached_servers: "{{ hostvars.controller01.mgmt_ip }}:11211,{{ hostvars.controller02.mgmt_ip }}:11211,{{ hostvars.controller03.mgmt_ip }}:11211"
-
-## keystone
-openstack_keystone_auth_uri: "http://{{ openstack_controller_host }}:5000"
-openstack_keystone_auth_url: "http://{{ openstack_controller_host }}:35357"
-openstack_keystone_auth_region: "RegionOne"
+## nova
+nova_keystone_user: "nova"
+nova_keystone_password: "nova"
 
 ## neutron
-openstack_neutron_public_interface: "eth1"
-
-# auth configure
-## ha
-openstack_hacluster_password: "openstack"
-
-## user
-openstack_admin_token: "openstack"
-openstack_admin_user: "openstack"
-openstack_admin_password: "openstack"
-openstack_demo_password: "demo"
-
-## keystone
-openstack_keystone_db_name: "keystone"
-openstack_keystone_db_user: "keystone"
-openstack_keystone_db_password: "keystone"
-## glance
-openstack_glance_keystone_password: "openstack"
-openstack_glance_db_name: "glance"
-openstack_glance_db_user: "glance"
-openstack_glance_db_password: "glance"
-## nova controller
-openstack_nova_keystone_password: "openstack"
-openstack_nova_db_name: "nova"
-openstack_nova_db_user: "nova"
-openstack_nova_db_password: "nova"
-## neutron controller
-openstack_neutron_keystone_password: "openstack"
-openstack_neutron_db_name: "neutron"
-openstack_neutron_db_user: "neutron"
-openstack_neutron_db_password: "neutron"
-## cinder
-openstack_cinder_user_password: "openstack"
-openstack_cinder_db_name: "cinder"
-openstack_cinder_db_user: "cinder"
-openstack_cinder_db_password: "cinder"
+neutron_public_interface: "bond2"

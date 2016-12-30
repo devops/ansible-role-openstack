@@ -1,0 +1,7 @@
+# Servers Network Configure
+- name: Ceph client install.
+  hosts:
+    - controller
+  remote_user: root
+  roles:
+    - role: ansible-role-ceph-client

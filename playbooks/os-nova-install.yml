@@ -1,0 +1,58 @@
+---
+
+- name: Installation and setup of nova.
+  hosts: nova_controller
+  remote_user: root
+  pre_tasks:
+    - name: Ensure Rabbitmq vhost for nova.
+      rabbitmq_vhost:
+        name: "{{ nova_rabbitmq_vhost }}"
+        state: "present"
+      delegate_to: "{{ groups['rabbitmq'][0] }}"
+      when:
+        - inventory_hostname == groups['nova_controller'][0]
+        - groups['rabbitmq']|length > 0
+
+    - name: Ensure rabbitmq user for nova.
+      rabbitmq_user:
+        user: "{{ nova_rabbitmq_userid }}"
+        password: "{{ nova_rabbitmq_password }}"
+        vhost: "{{ nova_rabbitmq_vhost }}"
+        configure_priv: ".*"
+        read_priv: ".*"
+        write_priv: ".*"
+        state: "present"
+      delegate_to: "{{ groups['rabbitmq'][0] }}"
+      when:
+        - inventory_hostname == groups['nova_controller'][0]
+        - groups['rabbitmq']|length > 0
+
+    - name: Setup DB for openstack nova.
+      mysql_db:
+        name: "{{ nova_db_name }}"
+        collation: "{{ nova_db_collation | default('utf8_general_ci') }}"
+        encoding: "{{ nova_db_encoding | default('utf8') }}"
+        login_host: "{{ openstack_db_host }}"
+        login_user: "{{ openstack_db_root_user | default('root') }}"
+        login_password: "{{ openstack_db_root_password }}"
+        state: present
+      when: inventory_hostname == groups['nova_controller'][0]
+      delegate_to: "{{ groups['galera'][0] }}"
+
+    - name: Setup DB User for openstack nova.
+      mysql_user:
+        name: "{{ nova_db_user }}"
+        password: "{{ nova_db_password }}"
+        host: "{{ item }}"
+        priv: "{{ nova_db_priv | default('*.*:ALL') }}"
+        login_host: "{{ openstack_db_host }}"
+        login_user: "{{ openstack_db_root_user | default('root') }}"
+        login_password: "{{ openstack_db_root_password }}"
+        state: present
+      with_items:
+        - localhost
+        - "%"
+      when: inventory_hostname == groups['nova_controller'][0]
+      delegate_to: "{{ groups['galera'][0] }}"
+  roles:
+    - role: "ansible-role-openstack-nova"

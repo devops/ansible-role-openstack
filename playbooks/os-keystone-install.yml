@@ -1,0 +1,35 @@
+---
+
+- name: Installation and setup of keystone.
+  hosts: keystone
+  remote_user: root
+  pre_tasks:
+    - name: Setup DB for openstack keystone.
+      mysql_db:
+        name: "{{ keystone_db_name }}"
+        collation: "{{ keystone_db_collation | default('utf8_general_ci') }}"
+        encoding: "{{ keystone_db_encoding | default('utf8') }}"
+        login_host: "{{ openstack_db_host }}"
+        login_user: "{{ openstack_db_root_user | default('root') }}"
+        login_password: "{{ openstack_db_root_password }}"
+        state: present
+      when: inventory_hostname == groups['keystone'][0]
+      delegate_to: "{{ groups['galera'][0] }}"
+
+    - name: Setup DB User for openstack keystone.
+      mysql_user:
+        name: "{{ keystone_db_user }}"
+        password: "{{ keystone_db_password }}"
+        host: "{{ item }}"
+        priv: "{{ keystone_db_priv | default('*.*:ALL') }}"
+        login_host: "{{ openstack_db_host }}"
+        login_user: "{{ openstack_db_root_user | default('root') }}"
+        login_password: "{{ openstack_db_root_password }}"
+        state: present
+      with_items:
+        - localhost
+        - "%"
+      when: inventory_hostname == groups['keystone'][0]
+      delegate_to: "{{ groups['galera'][0] }}"
+  roles:
+    - role: "ansible-role-openstack-keystone"

@@ -1,0 +1,35 @@
+---
+
+- name: Installation and setup of glance.
+  hosts: glance
+  remote_user: root
+  pre_tasks:
+    - name: Setup DB for openstack glance.
+      mysql_db:
+        name: "{{ glance_db_name }}"
+        collation: "{{ glance_db_collation | default('utf8_general_ci') }}"
+        encoding: "{{ glance_db_encoding | default('utf8') }}"
+        login_host: "{{ openstack_db_host }}"
+        login_user: "{{ openstack_db_root_user | default('root') }}"
+        login_password: "{{ openstack_db_root_password }}"
+        state: present
+      when: inventory_hostname == groups['glance'][0]
+      delegate_to: "{{ groups['galera'][0] }}"
+
+    - name: Setup DB User for openstack glance.
+      mysql_user:
+        name: "{{ glance_db_user }}"
+        password: "{{ glance_db_password }}"
+        host: "{{ item }}"
+        priv: "{{ glance_db_priv | default('*.*:ALL') }}"
+        login_host: "{{ openstack_db_host }}"
+        login_user: "{{ openstack_db_root_user | default('root') }}"
+        login_password: "{{ openstack_db_root_password }}"
+        state: present
+      with_items:
+        - localhost
+        - "%"
+      when: inventory_hostname == groups['glance'][0]
+      delegate_to: "{{ groups['galera'][0] }}"
+  roles:
+    - role: "ansible-role-openstack-glance"

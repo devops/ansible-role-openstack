@@ -1,0 +1,5 @@
+---
+
+- include: openstack-hosts-compute-setup.yml
+- include: os-nova-compute-install.yml
+- include: os-neutron-compute-install.yml

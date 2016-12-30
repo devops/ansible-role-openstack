@@ -9,10 +9,12 @@ repo_lan_repos:
 base_nameserver_servers:
   - 114.114.114.114
 
-# ntp
-ntp_servers:
-  - ntp.fudan.edu.cn prefer
-  - ntp.api.bz
+# chrony
+chrony_config_server:
+  - cn.pool.ntp.org
+
+chrony_config_allow:
+  - 172.23.192/18
 
 # sshd
 sshd_setup_firewall: false

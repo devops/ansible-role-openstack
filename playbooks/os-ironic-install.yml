@@ -1,0 +1,56 @@
+---
+
+- name: Installation and setup of ironic.
+  hosts: ironic
+  remote_user: root
+  pre_tasks:
+    ## Configure RabbitMQ
+    - name: Ensure Rabbitmq vhost for ironic.
+      rabbitmq_vhost:
+        name: "{{ ironic_rabbitmq_vhost }}"
+        state: "present"
+      delegate_to: "{{ groups['rabbitmq'][0] }}"
+      when:
+        - inventory_hostname == groups['cinder'][0]
+        - groups['rabbitmq']|length > 0
+
+    - name: Ensure rabbitmq user for ironic.
+      rabbitmq_user:
+        user: "{{ ironic_rabbitmq_userid }}"
+        password: "{{ ironic_rabbitmq_password }}"
+        vhost: "{{ ironic_rabbitmq_vhost }}"
+        configure_priv: ".*"
+        read_priv: ".*"
+        write_priv: ".*"
+        state: "present"
+      delegate_to: "{{ groups['rabbitmq'][0] }}"
+      when:
+        - inventory_hostname == groups['ironic'][0]
+        - groups['rabbitmq']|length > 0
+
+    ## Configure Database
+    - name: Setup DB for openstack ironic.
+      mysql_db:
+        name: "{{ ironic_db_name }}"
+        collation: "{{ ironic_db_collation | default('utf8_general_ci') }}"
+        encoding: "{{ ironic_db_encoding | default('utf8') }}"
+        login_host: "{{ ironic_db_host }}"
+        login_user: "{{ ironic_db_root_user | default('root') }}"
+        login_password: "{{ ironic_db_root_password }}"
+        state: present
+
+    - name: Setup DB User for openstack ironic.
+      mysql_user:
+        name: "{{ ironic_db_user }}"
+        password: "{{ ironic_db_password }}"
+        host: "{{ item }}"
+        priv: "{{ ironic_db_priv | default('*.*:ALL') }}"
+        login_host: "{{ ironic_db_host }}"
+        login_user: "{{ ironic_db_root_user | default('root') }}"
+        login_password: "{{ ironic_db_root_password }}"
+        state: present
+      with_items:
+        - localhost
+        - "%"
+  roles:
+    - role: "ansible-role-openstack-ironic"

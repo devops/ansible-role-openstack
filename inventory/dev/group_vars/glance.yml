@@ -1,0 +1,12 @@
+---
+# Glance
+
+# glance db
+glance_db_host: "{{ openstack_db_host }}"
+glance_db_name: "glance"
+glance_db_user: "glance"
+glance_db_password: "glance"
+
+# glance keystone
+glance_keystone_user: "glance"
+glance_keystone_password: "glance"

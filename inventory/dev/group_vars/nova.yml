@@ -1,0 +1,17 @@
+---
+
+# nova db
+nova_db_host: "{{ openstack_db_host }}"
+nova_db_name: "nova"
+nova_db_user: "nova"
+nova_db_password: "nova"
+
+# nova rabbitmq
+nova_rabbitmq_host: "{{ openstack_controller_host }}"
+nova_rabbitmq_userid: 'nova'
+nova_rabbitmq_password: 'nova'
+nova_rabbitmq_vhost: '/nova'
+
+# nova keystone
+nova_keystone_user: "nova"
+nova_keystone_password: "nova"

@@ -1,0 +1,16 @@
+---
+
+# ironic db
+ironic_db_host: "localhost"
+ironic_db_root_user: "root"
+ironic_db_root_password: "root"
+ironic_db_name: "ironic"
+ironic_db_user: "ironic"
+ironic_db_password: "ironic"
+
+# ironic rabbitmq
+ironic_rabbitmq_host: "localhost"
+ironic_rabbitmq_port: 5672
+ironic_rabbitmq_userid: 'ironic'
+ironic_rabbitmq_password: 'ironic'
+ironic_rabbitmq_vhost: '/ironic'

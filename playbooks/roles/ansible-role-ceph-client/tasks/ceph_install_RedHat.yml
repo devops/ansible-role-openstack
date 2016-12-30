@@ -1,0 +1,15 @@
+- name: Add ceph repo.
+  yum_repository:
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    baseurl: "{{ item.baseurl }}"
+    gpgcheck: "{{ item.gpgcheck | default('no') }}"
+    enabled: "{{ item.enabled | default('yes') }}"
+    file: ceph
+  with_items:
+    - "{{ ceph_repos }}"
+
+- name: Install ceph.
+  yum:
+    name: "ceph"
+    state: installed

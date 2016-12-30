@@ -1,0 +1,19 @@
+---
+
+# Ansible Controller node
+- name: Generate ssh key for nova user.
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Generate ssh key for nova user.
+      shell: |
+        mkdir -p fetch/compute
+        rm -rf fetch/compute/id_rsa*
+        ssh-keygen -N '' -q -f fetch/compute/id_rsa
+
+- name: Installation and setup of nova compute.
+  hosts: nova_compute
+  remote_user: root
+  roles:
+    - role: "ansible-role-ceph-client"
+    - role: "ansible-role-openstack-nova"

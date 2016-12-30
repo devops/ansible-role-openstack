@@ -1,0 +1,17 @@
+---
+# Servers Network Configure
+- name: Servers Network Configure.
+  hosts: ceph
+  remote_user: root
+  roles:
+    - role: ansible-role-network
+
+## Servers Base Configure
+- name: Init the system.
+  hosts: ceph
+  remote_user: root
+  roles:
+    - role: ansible-role-repo-lan
+    - role: ansible-role-sshd
+    - role: ansible-role-base
+    - role: ansible-role-chrony

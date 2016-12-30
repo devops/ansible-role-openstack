@@ -1,0 +1,74 @@
+quorum {
+        provider: corosync_votequorum
+        two_node: 0
+}
+
+nodelist {
+    node {
+        ring0_addr: {{ hostvars[groups['controller'][0]]['ansible_hostname'] }}
+        nodeid: 1
+    }
+
+    node {
+        ring0_addr: {{ hostvars[groups['controller'][1]]['ansible_hostname'] }}
+        nodeid: 2
+    }
+
+    node {
+        ring0_addr: {{ hostvars[groups['controller'][2]]['ansible_hostname'] }}
+        nodeid: 3
+    }
+}
+
+totem {
+        version:                             2
+        token:                               3000
+        token_retransmits_before_loss_const: 10
+        join:                                60
+        consensus:                           3600
+        vsftype:                             none
+        max_messages:                        20
+        clear_node_high_bit:                 yes
+        rrp_mode:                            none
+        secauth:                             off
+        threads:                             4
+        transport:                           udpu
+        interface {
+             ringnumber: 0
+             bindnetaddr: {{ openstack_corosync_bindnetaddr }}
+             broadcast: yes
+             mcastport: {{ openstack_corosync_mcastport }}
+        }
+}
+
+logging {
+        fileline:        off
+        to_stderr:       no
+        to_logfile:      no
+        logfile:         /var/log/cluster/corosync.log
+        to_syslog:       yes
+        syslog_facility: daemon
+        syslog_priority: info
+        debug:           off
+        function_name:   on
+        timestamp:       on
+        logger_subsys {
+                subsys: AMF
+                debug: off
+                tags: enter|leave|trace1|trace2|trace3|trace4|trace6
+        }
+}
+
+amf {
+     mode: disabled
+}
+
+aisexec {
+        user:   root
+        group:  root
+}
+
+service {
+        ver:       1
+        name:      pacemaker
+}

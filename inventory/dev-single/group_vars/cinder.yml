@@ -1,0 +1,17 @@
+---
+
+# cinder db
+cinder_db_host: "{{ openstack_db_host }}"
+cinder_db_name: "cinder"
+cinder_db_user: "cinder"
+cinder_db_password: "cinder"
+
+# cinder rabbitmq
+cinder_rabbitmq_host: "{{ openstack_controller_host }}"
+cinder_rabbitmq_userid: 'cinder'
+cinder_rabbitmq_password: 'cinder'
+cinder_rabbitmq_vhost: '/cinder'
+
+# cinder keystone
+cinder_keystone_user: "cinder"
+cinder_keystone_password: "cinder"

@@ -1,0 +1,4 @@
+---
+# Memcached
+memcached_listen_ip: "{{ mgmt_ip }}"
+memcached_log_enable: True

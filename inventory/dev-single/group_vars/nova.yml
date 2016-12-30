@@ -1,0 +1,81 @@
+---
+
+# nova db
+nova_db_host: "{{ openstack_db_host }}"
+nova_db_name: "nova"
+nova_db_user: "nova"
+nova_db_password: "nova"
+
+# nova rabbitmq
+nova_rabbitmq_host: "{{ openstack_controller_host }}"
+nova_rabbitmq_userid: 'nova'
+nova_rabbitmq_password: 'nova'
+nova_rabbitmq_vhost: '/nova'
+
+# nova keystone
+nova_keystone_user: "nova"
+nova_keystone_password: "nova"
+
+
+nova_config:
+  - { section: "database", param: "connection", value: "mysql://{{ nova_db_user }}:{{ nova_db_password }}@{{ nova_db_host }}/{{ nova_db_name }}" }
+  - { section: "DEFAULT", param: "rpc_backend", value: "{{ nova_rpc_backend }}" }
+  - { section: "DEFAULT", param: "auth_strategy", value: "{{ nova_auth_strategy }}" }
+  - { section: "DEFAULT", param: "my_ip", value: "{{ nova_my_ip }}" }
+  - { section: "DEFAULT", param: "network_api_class", value: "{{ nova_network_api_class }}" }
+  - { section: "DEFAULT", param: "security_group_api", value: "{{ nova_security_group_api }}" }
+  - { section: "DEFAULT", param: "linuxnet_interface_driver", value: "{{ nova_linuxnet_interface_driver }}" }
+  - { section: "DEFAULT", param: "firewall_driver", value: "{{ nova_firewall_driver }}" }
+  - { section: "DEFAULT", param: "enabled_apis", value: "{{ nova_enabled_apis }}" }
+  - { section: "DEFAULT", param: "verbose", value: "{{ nova_verbose }}" }
+  - { section: "DEFAULT", param: "memcached_servers", value: "{{ nova_memcached_servers }}" }
+  - { section: "DEFAULT", param: "osapi_compute_listen", value: "{{ nova_osapi_compute_listen }}" }
+  - { section: "DEFAULT", param: "metadata_listen", value: "{{ nova_metadata_listen }}" }
+  - { section: "DEFAULT", param: "novncproxy_host", value: "{{ nova_novncproxy_host }}" }
+  - { section: "DEFAULT", param: "ec2_listen", value: "{{ nova_ec2_listen }}" }
+  - { section: "glance", param: "host", value: "{{ nova_glance_host }}" }
+  - { section: "keystone_authtoken", param: "auth_uri", value: "{{ openstack_keystone_auth_uri }}" }
+  - { section: "keystone_authtoken", param: "auth_url", value: "{{ openstack_keystone_auth_url }}" }
+  - { section: "keystone_authtoken", param: "auth_plugin", value: "password" }
+  - { section: "keystone_authtoken", param: "project_domain_id", value: "default" }
+  - { section: "keystone_authtoken", param: "user_domain_id", value: "default" }
+  - { section: "keystone_authtoken", param: "project_name", value: "service" }
+  - { section: "keystone_authtoken", param: "username", value: "{{ nova_keystone_user }}" }
+  - { section: "keystone_authtoken", param: "password", value: "{{ nova_keystone_password }}" }
+  - { section: "vnc", param: "vncserver_listen", value: '\$my_ip' }
+  - { section: "vnc", param: "vncserver_proxyclient_address", value: '\$my_ip' }
+  - { section: "oslo_concurrency", param: "lock_path", value: "{{ nova_lock_path }}" }
+  - { section: "oslo_messaging_rabbit", param: "rabbit_userid", value: "{{ nova_rabbitmq_userid }}" }
+  - { section: "oslo_messaging_rabbit", param: "rabbit_password", value: "{{ nova_rabbitmq_password }}" }
+  - { section: "oslo_messaging_rabbit", param: "rabbit_virtual_host", value: "{{ nova_rabbitmq_vhost }}" }
+  - { section: "oslo_messaging_rabbit", param: "rabbit_host", value: "{{ nova_rabbitmq_host }}" }
+
+nova_compute_kvm_config:
+  - { section: "DEFAULT", param: "rpc_backend", value: "{{ nova_rpc_backend }}" }
+  - { section: "DEFAULT", param: "auth_strategy", value: "{{ nova_auth_strategy }}" }
+  - { section: "DEFAULT", param: "my_ip", value: "{{ nova_my_ip }}" }
+  - { section: "DEFAULT", param: "network_api_class", value: "{{ nova_network_api_class }}" }
+  - { section: "DEFAULT", param: "security_group_api", value: "{{ nova_security_group_api }}" }
+  - { section: "DEFAULT", param: "linuxnet_interface_driver", value: "{{ nova_linuxnet_interface_driver }}" }
+  - { section: "DEFAULT", param: "firewall_driver", value: "{{ nova_firewall_driver }}" }
+  - { section: "DEFAULT", param: "verbose", value: "{{ nova_verbose }}" }
+  - { section: "DEFAULT", param: "memcached_servers", value: "{{ nova_memcached_servers }}" }
+  - { section: "DEFAULT", param: "cpu_allocation_ratio", value: "{{ nova_cpu_allocation_ratio }}" }
+  - { section: "keystone_authtoken", param: "auth_uri", value: "{{ openstack_keystone_auth_uri }}" }
+  - { section: "keystone_authtoken", param: "auth_url", value: "{{ openstack_keystone_auth_url }}" }
+  - { section: "keystone_authtoken", param: "auth_plugin", value: "password" }
+  - { section: "keystone_authtoken", param: "project_domain_id", value: "default" }
+  - { section: "keystone_authtoken", param: "user_domain_id", value: "default" }
+  - { section: "keystone_authtoken", param: "project_name", value: "service" }
+  - { section: "keystone_authtoken", param: "username", value: "{{ nova_keystone_user }}" }
+  - { section: "keystone_authtoken", param: "password", value: "{{ nova_keystone_password }}" }
+  - { section: "vnc", param: "enabled", value: "{{ nova_vnc_enabled }}" }
+  - { section: "vnc", param: "vncserver_listen", value: "{{ nova_vncserver_listen }}" }
+  - { section: "vnc", param: "vncserver_proxyclient_address", value: '\$my_ip' }
+  - { section: "vnc", param: "novncproxy_base_url", value: "{{ nova_novncproxy_base_url }}" }
+  - { section: "glance", param: "host", value: "{{ nova_glance_host }}" }
+  - { section: "oslo_concurrency", param: "lock_path", value: "{{ nova_lock_path }}" }
+  - { section: "oslo_messaging_rabbit", param: "rabbit_userid", value: "{{ nova_rabbitmq_userid }}" }
+  - { section: "oslo_messaging_rabbit", param: "rabbit_password", value: "{{ nova_rabbitmq_password }}" }
+  - { section: "oslo_messaging_rabbit", param: "rabbit_virtual_host", value: "{{ nova_rabbitmq_vhost }}" }
+  - { section: "oslo_messaging_rabbit", param: "rabbit_host", value: "{{ nova_rabbitmq_host }}" }

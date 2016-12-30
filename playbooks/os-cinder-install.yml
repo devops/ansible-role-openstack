@@ -1,0 +1,59 @@
+---
+
+- name: Installation and setup of cinder.
+  hosts: cinder
+  remote_user: root
+  pre_tasks:
+    - name: Ensure Rabbitmq vhost for cinder.
+      rabbitmq_vhost:
+        name: "{{ cinder_rabbitmq_vhost }}"
+        state: "present"
+      delegate_to: "{{ groups['rabbitmq'][0] }}"
+      when:
+        - inventory_hostname == groups['cinder'][0]
+        - groups['rabbitmq']|length > 0
+
+    - name: Ensure rabbitmq user for cinder.
+      rabbitmq_user:
+        user: "{{ cinder_rabbitmq_userid }}"
+        password: "{{ cinder_rabbitmq_password }}"
+        vhost: "{{ cinder_rabbitmq_vhost }}"
+        configure_priv: ".*"
+        read_priv: ".*"
+        write_priv: ".*"
+        state: "present"
+      delegate_to: "{{ groups['rabbitmq'][0] }}"
+      when:
+        - inventory_hostname == groups['cinder'][0]
+        - groups['rabbitmq']|length > 0
+
+    - name: Setup DB for openstack cinder.
+      mysql_db:
+        name: "{{ cinder_db_name }}"
+        collation: "{{ cinder_db_collation | default('utf8_general_ci') }}"
+        encoding: "{{ cinder_db_encoding | default('utf8') }}"
+        login_host: "{{ openstack_db_host }}"
+        login_user: "{{ openstack_db_root_user | default('root') }}"
+        login_password: "{{ openstack_db_root_password }}"
+        state: present
+      when: inventory_hostname == groups['cinder'][0]
+      delegate_to: "{{ groups['galera'][0] }}"
+
+    - name: Setup DB User for openstack cinder.
+      mysql_user:
+        name: "{{ cinder_db_user }}"
+        password: "{{ cinder_db_password }}"
+        host: "{{ item }}"
+        priv: "{{ cinder_db_priv | default('*.*:ALL') }}"
+        login_host: "{{ openstack_db_host }}"
+        login_user: "{{ openstack_db_root_user | default('root') }}"
+        login_password: "{{ openstack_db_root_password }}"
+        state: present
+      with_items:
+        - localhost
+        - "%"
+      when: inventory_hostname == groups['cinder'][0]
+      delegate_to: "{{ groups['galera'][0] }}"
+  roles:
+    - role: "ansible-role-openstack-cinder"
+    - role: "ansible-role-ceph-client"

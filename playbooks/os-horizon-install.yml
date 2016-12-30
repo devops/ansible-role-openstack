@@ -1,0 +1,7 @@
+---
+
+- name: Installation and setup of horizon.
+  hosts: horizon
+  remote_user: root
+  roles:
+    - role: "ansible-role-openstack-horizon"

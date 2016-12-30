@@ -1,0 +1,36 @@
+---
+- name: Copy openstack ceph key.
+  copy:
+    src: "fetch/{{ ceph_fsid }}/{{ groups['ceph-mon'][0] }}/etc/ceph/ceph.client.{{ item.name }}.keyring"
+    dest: "/etc/ceph/ceph.client.{{ item.name }}.keyring"
+    owner: "{{ item.owner }}"
+    group: "{{ item.owner }}"
+    mode: 0600
+  with_items:
+    - "{{ ceph_openstack_keys }}"
+  when:
+    - "inventory_hostname in groups['controller']"
+  tags:
+    - cinder-ceph-conf
+
+# - name: Copy openstack ceph cinder key.
+#   copy:
+#     src: "fetch/{{ ceph_fsid }}/{{ groups['ceph-mon'][0] }}/etc/ceph/ceph.client.cinder.keyring"
+#     dest: "/etc/ceph/ceph.client.cinder.keyring"
+#   when:
+#     - "inventory_hostname in groups['nova_compute']"
+#
+# - name: Copy  secret file.
+#   template:
+#     src: "secret.xml.j2"
+#     dest: "/tmp/secret.xml"
+#   when:
+#     - "inventory_hostname in groups['nova_compute']"
+#
+# - name: define secret.
+#   shell: |
+#     virsh secret-define --file /tmp/secret.xml
+#     virsh secret-set-value --secret {{ openstack_libvirt_secret_uuid }} --base64 $(tail -n 1 /etc/ceph/ceph.client.cinder.keyring | awk '{print $3}')
+#     rm /tmp/secret.xml
+#   when:
+#     - "inventory_hostname in groups['nova_compute']"

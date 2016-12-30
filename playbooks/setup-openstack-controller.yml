@@ -1,0 +1,10 @@
+---
+
+- include: os-keystone-install.yml
+- include: os-glance-install.yml
+- include: os-nova-install.yml
+- include: os-neutron-install.yml
+- include: os-cinder-install.yml
+- include: os-horizon-install.yml
+#- include: os-ceilometer-install.yml
+- include: setup-firewall.yml

@@ -1,25 +1,34 @@
 ---
 # network
-network_ethernet_interfaces:
-  - device: eth0
+network_bond_interfaces:
+  - device: bond0
     bootproto: static
+    vlan: yes
     address: "{{ admin_ip }}"
-    netmask: 255.255.192.0
+    netmask: 255.255.255.0
     gateway: "{{ admin_ip_gateway }}"
-  - device: eth1
+    bond_mode: 1
+    bond_slaves: [eth0]
+  - device: bond1
     bootproto: static
     address: "{{ sp_ip }}"
-  - device: eth2
+    bond_mode: 1
+    bond_slaves: [eth1]
+  - device: bond2
     bootproto: static
     address: "{{ sc_ip }}"
+    bond_mode: 1
+    bond_slaves: [eth2]
 
 # ceph-common
 ceph_repo_enable: True
-ceph_repo_baseurl: "http://172.23.11.2/repo/ceph/rpm-firefly/el7/"
+ceph_repo_baseurl: "http://mirrors.aliyun.com/ceph/rpm-firefly/el7/"
 
 ceph_cluster_name: "ceph"
 ceph_fsid: "cc546e6b-52ab-456b-8283-adff1cd61bce"
 
+ceph_cluster_network: "10.0.3.0/24"
+cep_mon_host: "{{ hostvars[groups['ceph-mon'][0]]['sp_ip'] }}, {{ hostvars[groups['ceph-mon'][1]]['sp_ip'] }}, {{ hostvars[groups['ceph-mon'][2]]['sp_ip'] }}"
 # openstack
 openstack_config: True
 

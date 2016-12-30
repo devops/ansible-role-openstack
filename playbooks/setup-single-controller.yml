@@ -1,0 +1,37 @@
+---
+
+# - include: openstack-controller-hosts-setup.yml
+#
+## MySQL Database
+- name: Install MySQL Database.
+  hosts: galera
+  remote_user: root
+  roles:
+    - role: ansible-role-mysql
+
+## RabbitMQ
+- name: Install RabbitMQ.
+  hosts: rabbitmq
+  remote_user: root
+  roles:
+    - role: ansible-role-rabbitmq
+
+## Memcached
+- name: Install Memcached.
+  hosts: memcached
+  remote_user: root
+  roles:
+    - role: ansible-role-memcached
+
+## Haproxy
+- name: Install Haproxy.
+  hosts: haproxy
+  remote_user: root
+  pre_tasks:
+    - name: Configure ip
+      shell: ip addr add 10.0.1.10/24 dev eth1
+      ignore_errors: True
+  roles:
+    - role: ansible-role-haproxy
+
+- include: setup-openstack.yml

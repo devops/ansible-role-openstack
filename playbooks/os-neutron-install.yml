@@ -1,0 +1,58 @@
+---
+
+- name: Installation and setup of neutron.
+  hosts: neutron_controller
+  remote_user: root
+  pre_tasks:
+    - name: Ensure Rabbitmq vhost for neutron.
+      rabbitmq_vhost:
+        name: "{{ neutron_rabbitmq_vhost }}"
+        state: "present"
+      delegate_to: "{{ groups['rabbitmq'][0] }}"
+      when:
+        - inventory_hostname == groups['neutron_controller'][0]
+        - groups['rabbitmq']|length > 0
+
+    - name: Ensure rabbitmq user for neutron.
+      rabbitmq_user:
+        user: "{{ neutron_rabbitmq_userid }}"
+        password: "{{ neutron_rabbitmq_password }}"
+        vhost: "{{ neutron_rabbitmq_vhost }}"
+        configure_priv: ".*"
+        read_priv: ".*"
+        write_priv: ".*"
+        state: "present"
+      delegate_to: "{{ groups['rabbitmq'][0] }}"
+      when:
+        - inventory_hostname == groups['neutron_controller'][0]
+        - groups['rabbitmq']|length > 0
+
+    - name: Setup DB for openstack neutron.
+      mysql_db:
+        name: "{{ neutron_db_name }}"
+        collation: "{{ neutron_db_collation | default('utf8_general_ci') }}"
+        encoding: "{{ neutron_db_encoding | default('utf8') }}"
+        login_host: "{{ openstack_db_host }}"
+        login_user: "{{ openstack_db_root_user | default('root') }}"
+        login_password: "{{ openstack_db_root_password }}"
+        state: present
+      when: inventory_hostname == groups['neutron_controller'][0]
+      delegate_to: "{{ groups['galera'][0] }}"
+
+    - name: Setup DB User for openstack neutron.
+      mysql_user:
+        name: "{{ neutron_db_user }}"
+        password: "{{ neutron_db_password }}"
+        host: "{{ item }}"
+        priv: "{{ neutron_db_priv | default('*.*:ALL') }}"
+        login_host: "{{ openstack_db_host }}"
+        login_user: "{{ openstack_db_root_user | default('root') }}"
+        login_password: "{{ openstack_db_root_password }}"
+        state: present
+      with_items:
+        - localhost
+        - "%"
+      when: inventory_hostname == groups['neutron_controller'][0]
+      delegate_to: "{{ groups['galera'][0] }}"
+  roles:
+    - role: "ansible-role-openstack-neutron"

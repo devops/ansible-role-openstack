@@ -1,0 +1,4 @@
+---
+
+- include: ceph-hosts-setup.yml
+- include: ceph-install.yml

@@ -1,0 +1,30 @@
+---
+# defaults file for ansible-role-ceph-client
+
+ceph_repo_baseurl: "http://mirrors.aliyun.com/ceph/rpm-firefly/el7/"
+ceph_repos:
+  - name: "Ceph"
+    description: "Ceph packages for $basearch"
+    baseurl: "{{ ceph_repo_baseurl }}/$basearch"
+    enabled: yes
+    gpgcheck: no
+  - name: "Ceph-noarch"
+    description: "Ceph noarch packages"
+    baseurl: "{{ ceph_repo_baseurl }}/noarch"
+    enabled: yes
+    gpgcheck: no
+
+# ceph_conf_file: |
+#  [global]
+#  fsid = 4037aa5f-abde-4378-9470-f73dbd6ceaba
+#  mon_initial_members = mon1.example.local,mon2.example.local,mon3.example.local
+#  mon_host = 10.16.5.40,10.16.5.41,10.16.5.42
+#  auth_cluster_required = cephx
+#  auth_service_required = cephx
+#  auth_client_required = cephx
+
+ceph_fsid: "cc546e6b-52ab-456b-8283-adff1cd61bce"
+ceph_openstack_keys:
+  - { name: glance, owner: "glance" }
+  - { name: cinder, owner: "cinder" }
+  - { name: cinder-backup, owner: "cinder" }

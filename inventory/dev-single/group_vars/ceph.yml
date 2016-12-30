@@ -1,0 +1,41 @@
+---
+# network
+network_ethernet_interfaces:
+  - device: eth0
+    bootproto: static
+    address: "{{ admin_ip }}"
+    netmask: 255.255.255.0
+    gateway: "{{ admin_ip_gateway }}"
+  - device: eth1
+    bootproto: static
+    address: "{{ sp_ip }}"
+  - device: eth2
+    bootproto: static
+    address: "{{ sc_ip }}"
+
+# ceph-common
+ceph_repo_enable: True
+ceph_repo_baseurl: "http://mirrors.aliyun.com/ceph/rpm-firefly/el7/"
+
+ceph_cluster_name: "ceph"
+ceph_fsid: "cc546e6b-52ab-456b-8283-adff1cd61bce"
+
+# openstack
+openstack_config: True
+
+# Monitor options
+
+monitor_secret: AQAnV5dWAAAAABAA/gEcrn76zFfFBp8NTdxfNQ==
+
+# cephx options
+cephx: True
+
+# Devices to be used as OSDs
+devices:
+  - /dev/vdb
+
+# Use 'None' to undefined the variable.
+# Using 'None' will colocate both journal and data on the same disk
+# creating a partition at the beginning of the device
+#
+#journal_device: "/dev/sdb"

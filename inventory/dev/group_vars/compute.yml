@@ -1,15 +1,26 @@
 ---
-network_ethernet_interfaces:
-  - device: eth0
+network_bond_interfaces:
+  - device: bond0
     bootproto: static
+    vlan: yes
     address: "{{ admin_ip }}"
-    netmask: 255.255.192.0
+    netmask: 255.255.255.0
     gateway: "{{ admin_ip_gateway }}"
-  - device: eth1
+    bond_mode: 1
+    bond_slaves: [eth0]
+  - device: bond1
     bootproto: static
+    vlan: yes
     address: "{{ mgmt_ip }}"
-  - device: eth2
+    bond_mode: 1
+    bond_slaves: [eth1]
+  - device: bond2
     bootproto: static
-  - device: eth3
+    vlan: yes
+    bond_mode: 1
+    bond_slaves: [eth2]
+  - device: bond3
     bootproto: static
     address: "{{ sp_ip }}"
+    bond_mode: 1
+    bond_slaves: [eth3]

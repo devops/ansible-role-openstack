@@ -1,0 +1,26 @@
+---
+
+# neutron db
+neutron_db_host: "{{ openstack_db_host }}"
+neutron_db_name: "neutron"
+neutron_db_user: "neutron"
+neutron_db_password: "neutron"
+
+# neutron rabbitmq
+neutron_rabbitmq_host: "{{ openstack_controller_host }}"
+neutron_rabbitmq_userid: 'neutron'
+neutron_rabbitmq_password: 'neutron'
+neutron_rabbitmq_vhost: '/neutron'
+
+# neutron keystone
+neutron_keystone_user: "neutron"
+neutron_keystone_password: "neutron"
+
+# neutron network option
+neutron_network_lxb: True
+neutron_network_ovs: False
+neutron_network_option: "provider"
+#neutron_public_interface: "bond2"
+
+# neutron config
+neutron_metadata_proxy_shared_secret: "openstack"

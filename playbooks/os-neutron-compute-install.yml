@@ -1,0 +1,7 @@
+---
+
+- name: Installation and setup of neutron compute.
+  hosts: neutron_compute
+  remote_user: root
+  roles:
+    - role: "ansible-role-openstack-neutron"

@@ -1,0 +1,16 @@
+---
+# tasks file for ansible-role-ceph-client
+
+# Variable setup.
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+# Setup/Install tasks.
+- include: ceph_install_RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+# Configure tasks.
+- include: ceph_configure.yml
+
+# Auth tasks.
+- include: ceph_auth.yml

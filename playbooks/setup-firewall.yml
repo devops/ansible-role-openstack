@@ -1,0 +1,15 @@
+---
+# tasks file for firewall
+
+- name: Configure firewall.
+  hosts: controller
+  remote_user: root
+  tasks:
+    - name: Configure Controller host firewall
+      shell: |
+        iptables -I INPUT 5 -p tcp -m multiport --ports 5000 -m comment --comment "openstack keystone" -j ACCEPT
+        iptables -I INPUT 5 -p tcp -m multiport --ports 9292,9191 -m comment --comment "openstack glance" -j ACCEPT
+        iptables -I INPUT 5 -p tcp -m multiport --ports 8773,8774,8775,6080 -m comment --comment "openstack nova " -j ACCEPT
+        iptables -I INPUT 5 -p tcp -m multiport --ports 8776 -m comment --comment "openstack cinder " -j ACCEPT
+        iptables -I INPUT 5 -p tcp -m multiport --ports 9696 -m comment --comment "openstack neutron " -j ACCEPT
+        iptables-save > /etc/sysconfig/iptables

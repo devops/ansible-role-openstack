@@ -1,0 +1,4 @@
+---
+
+- include: openstack-hosts-controller-setup.yml
+- include: openstack-hosts-compute-setup.yml

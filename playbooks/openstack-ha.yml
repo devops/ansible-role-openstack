@@ -1,0 +1,83 @@
+---
+# tasks file for openstack ha
+
+- name: Install pacemake & corosync packages.
+  yum: name={{ item }} state=installed
+  with_items:
+    - pacemaker
+    - corosync
+    - pcs
+  tags: ha
+
+- name: Copy the configuration files for corosync.
+  template: src=corosync.conf.j2 dest=/etc/corosync/corosync.conf
+  tags: ha
+
+- name: Ensure pcsd service is started.
+  service: name={{ item }} state=started
+  with_items:
+    - pcsd
+  tags: ha
+
+- name: Setup hacluster user password and to authenticate as the hacluster user.
+  shell: |
+    echo {{ openstack_hacluster_password }} | passwd --stdin hacluster
+    pcs cluster auth {{ hostvars[groups['controller'][0]]['ansible_hostname'] }} {{ hostvars[groups['controller'][1]]['ansible_hostname'] }} {{ hostvars[groups['controller'][2]]['ansible_hostname'] }} -u hacluster -p {{ openstack_hacluster_password }} --force
+  tags: ha
+
+- name: Setup and Started pacemaker cluster.
+  shell: |
+    #pcs cluster setup --name openstack {{ hostvars[groups['controller'][0]]['ansible_hostname'] }} {{ hostvars[groups['controller'][1]]['ansible_hostname'] }} {{ hostvars[groups['controller'][2]]['ansible_hostname'] }} --force
+    pcs cluster start --all
+  run_once: True
+  tags: ha
+
+- name: Configure pacemaker cluster.
+  shell: |
+    pcs property set stonith-enabled=false
+  when: ansible_hostname == hostvars[groups['controller'][0]]['ansible_hostname']
+  tags: ha
+
+- name: Ensure corosync && pacemaker && pcsd service is enabled on boot.
+  service: name={{ item }} enabled=yes
+  with_items:
+    - corosync
+    - pacemaker
+    - pcsd
+  tags: ha
+
+# # HAproxy
+# - name: Install HAProxy packages.
+#   yum: name={{ item }} state=installed
+#   with_items:
+#     - haproxy
+#   tags: haproxy
+#
+# - name: Configure sysctl for HAProxy.
+#   sysctl: name=net.ipv4.ip_nonlocal_bind value=1 state=present
+#   tags: haproxy
+#
+# - name: Copy the configuration files for HAProxy.
+#   template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
+#   tags: haproxy
+
+# - name: Ensure HAProxy is started and enabled on boot
+#   service: name={{ item }} enabled=yes state=started
+#   ignore_errors: True
+#   with_items:
+#     - haproxy
+#   tags: haproxy
+
+# Pacemake cluster resource
+- name: Configure pacemaker resource.
+  shell: |
+    pcs resource create VIP_Internal ocf:heartbeat:IPaddr2 ip={{ openstack_internal_vip }} cidr_netmask={{ openstack_internal_netmask }} op monitor interval=30s
+    pcs resource create VIP_Public ocf:heartbeat:IPaddr2 ip={{ openstack_public_vip }} cidr_netmask={{ openstack_public_netmask }} op monitor interval=30s
+    pcs resource create p_haproxy systemd:haproxy --clone
+    pcs constraint colocation add VIP_Internal with p_haproxy-clone
+    pcs constraint colocation add VIP_Public with p_haproxy-clone
+    pcs constraint colocation add VIP_Public with VIP_Internal
+    pcs constraint order start VIP_Internal then p_haproxy-clone kind=Optional
+    sleep 15
+  run_once: True
+  tags: ha

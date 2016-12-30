@@ -1,0 +1,4 @@
+---
+
+- include: setup-openstack-controller.yml
+- include: setup-openstack-compute.yml

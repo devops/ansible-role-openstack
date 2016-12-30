@@ -1,0 +1,40 @@
+- name: Copy ceph configure file.
+  copy:
+    src: "fetch/{{ ceph_fsid }}/{{ groups['ceph-mon'][0] }}/etc/ceph/ceph.conf"
+    dest: "/etc/ceph/ceph.conf"
+
+# - name: Get ceph.conf and store contents when ceph_conf_file is not defined
+#   slurp:
+#     src: /etc/ceph/ceph.conf
+#   register: ceph_conf_content_mon
+#   delegate_to: '{{ ceph_mon_host }}'
+#   changed_when: false
+#   when: ceph_conf_file is not defined
+#   tags:
+#     - ceph-config-get-config
+#
+# - name: Register ceph_conf fact when ceph_conf_file is not defined
+#   set_fact:
+#      ceph_conf: "{{ ceph_conf_content_mon.content | b64decode }}"
+#   when: ceph_conf_file is not defined
+#   tags:
+#     - ceph-config-get-config
+#
+# - name: Register ceph_conf fact when ceph_conf_file is defined
+#   set_fact:
+#      ceph_conf: "{{ ceph_conf_file }}"
+#   when: ceph_conf_file is defined
+#   tags:
+#     - ceph-config-get-config
+#
+# - name: Create ceph.conf from mon host
+#   copy:
+#     content: '{{ ceph_conf }}'
+#     dest: /etc/ceph/ceph.conf
+#     owner:  root
+#     group:  root
+#     mode:   0644
+#   notify:
+#   - Restart os services
+#   tags:
+#     - ceph-config-create-config

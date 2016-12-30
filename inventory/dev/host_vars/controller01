@@ -1,7 +1,7 @@
 ---
-host_name: controller01
-admin_ip: 172.23.192.111
-admin_ip_gateway: 172.23.255.254
-public_ip: 192.168.8.11
+host_name: controller01-dev
+admin_ip: 172.23.40.11
+admin_ip_gateway: 172.23.40.254
+public_ip: 172.23.4.11
 mgmt_ip: 10.0.1.11
 sp_ip: 10.0.2.11

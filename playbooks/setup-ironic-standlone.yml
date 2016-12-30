@@ -1,0 +1,31 @@
+---
+
+## MySQL Database
+- name: Install MySQL Database.
+  hosts: ironic
+  remote_user: root
+  roles:
+    - role: ansible-role-mysql
+
+- name: Base Configure
+  hosts: ironic
+  tasks:
+    - name: Ensure base service is stopped and disabled on boot.
+      service: name={{ item }} enabled=no state=stopped
+      ignore_errors: True
+      with_items:
+        - NetworkManager
+        - firewalld
+    - name: Install OpenStack release packages
+      yum:
+        name: "centos-release-openstack-newton"
+        state: installed
+## RabbitMQ
+- name: Install RabbitMQ.
+  hosts: ironic
+  remote_user: root
+  roles:
+    - role: ansible-role-rabbitmq
+      rabbitmq_cluster_master: "{{ hostvars[groups['rabbitmq'][0]]['ansible_hostname'] }}"
+
+- include: os-ironic-install.yml

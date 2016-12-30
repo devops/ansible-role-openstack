@@ -1,0 +1,25 @@
+---
+
+# Servers Network Configure
+- name: Servers Network Configure.
+  hosts: controller
+  remote_user: root
+  roles:
+    - role: ansible-role-network
+
+## Servers Base Configure
+- name: Init the system.
+  hosts: controller
+  remote_user: root
+  roles:
+    - role: ansible-role-repo-lan
+    - role: ansible-role-sshd
+    - role: ansible-role-base
+    - role: ansible-role-chrony
+
+## Openstack-common
+- name: OpenStack Controller Node Base Configure.
+  hosts: controller
+  remote_user: root
+  roles:
+    - role: ansible-role-openstack-common

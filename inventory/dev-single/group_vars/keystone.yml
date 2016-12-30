@@ -1,0 +1,8 @@
+---
+
+# Keystone
+## db
+keystone_db_host: "{{ openstack_db_host }}"
+keystone_db_name: "keystone"
+keystone_db_user: "keystone"
+keystone_db_password: "keystone"

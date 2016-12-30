@@ -1,0 +1,7 @@
+---
+host_name: controller01-production
+admin_ip: 172.23.40.111
+admin_ip_gateway: 172.23.40.254
+public_ip: 172.23.4.111
+mgmt_ip: 10.0.1.11
+sp_ip: 10.0.2.11
