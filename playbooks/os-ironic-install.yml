@@ -11,7 +11,7 @@
         state: "present"
       delegate_to: "{{ groups['rabbitmq'][0] }}"
       when:
-        - inventory_hostname == groups['cinder'][0]
+        - inventory_hostname == groups['ironic'][0]
         - groups['rabbitmq']|length > 0
 
     - name: Ensure rabbitmq user for ironic.

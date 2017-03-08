@@ -6,6 +6,17 @@
   remote_user: root
   roles:
     - role: ansible-role-mysql
+  vars:
+    mysql_root_username: "{{ ironic_db_root_user }}"
+    mysql_root_password: "{{ ironic_db_root_password }}"
+    mysql_users:
+      - { name: "{{ mysql_root_username }}", host: "%", password: "{{ mysql_root_password }}", priv: "*.*:GRANT,ALL" }
+    mysql_datadir: "/data/mariadb"
+    mysql_packages:
+      - mariadb
+      - mariadb-server
+      - mariadb-libs
+    mysql_daemon: mariadb
 
 - name: Base Configure
   hosts: ironic
@@ -20,12 +31,13 @@
       yum:
         name: "centos-release-openstack-newton"
         state: installed
+
 ## RabbitMQ
 - name: Install RabbitMQ.
   hosts: ironic
   remote_user: root
   roles:
     - role: ansible-role-rabbitmq
-      rabbitmq_cluster_master: "{{ hostvars[groups['rabbitmq'][0]]['ansible_hostname'] }}"
+      rabbitmq_cluster: False
 
 - include: os-ironic-install.yml
