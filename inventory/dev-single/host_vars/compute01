@@ -1,6 +1,6 @@
 ---
 host_name: compute01-dev
-admin_ip: 172.23.40.121
+admin_ip: 172.23.40.21
 admin_ip_gateway: 172.23.40.254
 mgmt_ip: 10.0.1.21
 sp_ip: 10.0.2.21
