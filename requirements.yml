@@ -72,6 +72,12 @@
   version: 0.9.1
   path: roles/
 
+- name: ansible-role-openstack-common
+  src: https://github.com/devops/ansible-role-openstack-common.git
+  scm: git
+  version: 1.0.1
+  path: roles/
+
 - name: ansible-role-openstack-cinder
   src: https://github.com/devops/ansible-role-openstack-cinder.git
   scm: git
