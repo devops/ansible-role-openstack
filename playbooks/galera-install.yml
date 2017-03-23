@@ -1,0 +1,7 @@
+---
+
+- name: Install MariaDB Galera.
+  hosts: galera
+  remote_user: root
+  roles:
+    - role: ansible-role-mariadb-galera

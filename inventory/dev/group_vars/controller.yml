@@ -19,7 +19,7 @@ network_bond_interfaces:
     vlan: yes
     bond_mode: 1
     bond_slaves: [eth2]
-  - device: bond2.2504
+  - device: bond2.2562
     bootproto: static
     vlan: yes
     address: "{{ public_ip }}"
@@ -31,3 +31,4 @@ network_bond_interfaces:
     address: "{{ sp_ip }}"
     bond_mode: 1
     bond_slaves: [eth3]
+

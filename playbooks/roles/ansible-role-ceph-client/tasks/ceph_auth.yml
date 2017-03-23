@@ -1,7 +1,7 @@
 ---
 - name: Copy openstack ceph key.
   copy:
-    src: "fetch/{{ ceph_fsid }}/{{ groups['ceph-mon'][0] }}/etc/ceph/ceph.client.{{ item.name }}.keyring"
+    src: "{{ inventory_dir }}/fetch/{{ ceph_fsid }}/{{ groups['ceph-mon'][0] }}/etc/ceph/ceph.client.{{ item.name }}.keyring"
     dest: "/etc/ceph/ceph.client.{{ item.name }}.keyring"
     owner: "{{ item.owner }}"
     group: "{{ item.owner }}"

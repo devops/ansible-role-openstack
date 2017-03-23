@@ -1,0 +1,14 @@
+---
+
+- name: Basic openstack host group setup
+  hosts: openstack
+  gather_facts: "{{ gather_facts | default(True) }}"
+  remote_user: root
+  roles:
+    - role: ansible-role-network
+    - role: ansible-role-repo-lan
+    - role: ansible-role-sshd
+    - role: ansible-role-base
+    - role: ansible-role-chrony
+    - role: ansible-role-openstack-common
+  tags: openstack-hosts

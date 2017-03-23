@@ -1,0 +1,7 @@
+---
+
+- name: Install RabbitMQ.
+  hosts: rabbitmq
+  remote_user: root
+  roles:
+    - role: ansible-role-rabbitmq

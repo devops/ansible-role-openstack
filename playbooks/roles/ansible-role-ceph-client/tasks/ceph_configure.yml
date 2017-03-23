@@ -1,6 +1,6 @@
 - name: Copy ceph configure file.
   copy:
-    src: "fetch/{{ ceph_fsid }}/{{ groups['ceph-mon'][0] }}/etc/ceph/ceph.conf"
+    src: "{{ inventory_dir }}/fetch/{{ ceph_fsid }}/{{ groups['ceph-mon'][0] }}/etc/ceph/ceph.conf"
     dest: "/etc/ceph/ceph.conf"
 
 # - name: Get ceph.conf and store contents when ceph_conf_file is not defined

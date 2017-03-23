@@ -1,120 +1,109 @@
 - name: ansible-role-base
   src: https://github.com/devops/ansible-role-base.git
   scm: git
-  version: master
+  version: 1.0.0
   path: roles/
 
 - name: ansible-role-ceph-common
   src: https://github.com/devops/ansible-role-ceph-common.git
   scm: git
-  version: master
+  version: 0.9.0
   path: roles/
 
 - name: ansible-role-ceph-mon
   src: https://github.com/devops/ansible-role-ceph-mon.git
   scm: git
-  version: master
+  version: 0.9.1
   path: roles/
 
 - name: ansible-role-ceph-osd
   src: https://github.com/devops/ansible-role-ceph-osd.git
   scm: git
-  version: master
+  version: 0.9.1
   path: roles/
 
 - name: ansible-role-mariadb-galera
   src: https://github.com/devops/ansible-role-mariadb-galera.git
   scm: git
-  version: master
+  version: 0.9.1
   path: roles/
 
 - name: ansible-role-memcached
   src: https://github.com/devops/ansible-role-memcached.git
   scm: git
-  version: master
+  version: 0.9.0
   path: roles/
 
 - name: ansible-role-network
   src: https://github.com/devops/ansible-role-network.git
   scm: git
-  version: master
-  path: roles/
-
-- name: ansible-role-ntp
-  src: https://github.com/devops/ansible-role-ntp.git
-  scm: git
-  version: master
+  version: 1.0.1
   path: roles/
 
 - name: ansible-role-chrony
   src: https://github.com/devops/ansible-role-chrony.git
   scm: git
-  version: master
+  version: 1.0.0
   path: roles/
 
 - name: ansible-role-repo-lan
   src: https://github.com/devops/ansible-role-repo-lan.git
   scm: git
-  version: master
+  version: 1.0.1
   path: roles/
 
-- name: ansible-role-repo-epel
-  src: https://github.com/devops/ansible-role-repo-epel.git
-  scm: git
-  version: master
-  path: roles/
 
 - name: ansible-role-rabbitmq
   src: https://github.com/devops/ansible-role-rabbitmq.git
   scm: git
-  version: master
+  version: 0.9.1
   path: roles/
 
 - name: sshd
   src: https://github.com/devops/ansible-role-sshd.git
   scm: git
-  version: master
+  version: 1.0.1
   path: roles/
 
 
 - name: rabbitmq
   src: https://github.com/devops/ansible-role-rabbitmq.git
   scm: git
-  version: master
+  version: 0.9.1
   path: roles/
 
 - name: ansible-role-openstack-cinder
   src: https://github.com/devops/ansible-role-openstack-cinder.git
   scm: git
-  version: master
+  version: mitaka-1.0
   path: roles/
 
 - name: ansible-role-openstack-horizon
   src: https://github.com/devops/ansible-role-openstack-horizon.git
   scm: git
-  version: master
+  version: mitaka-1.0
   path: roles/
 
 - name: ansible-role-openstack-neutron
   src: https://github.com/devops/ansible-role-openstack-neutron.git
   scm: git
-  version: master
+  version: mitaka-1.0
   path: roles/
 
 - name: ansible-role-openstack-nova
   src: https://github.com/devops/ansible-role-openstack-nova.git
   scm: git
-  version: master
+  version: mitaka-1.0
   path: roles/
 
 - name: ansible-role-openstack-glance
   src: https://github.com/devops/ansible-role-openstack-glance.git
   scm: git
-  version: master
+  version: mitaka-1.0
   path: roles/
 
 - name: ansible-role-openstack-keystone
   src: https://github.com/devops/ansible-role-openstack-keystone.git
   scm: git
-  version: master
+  version: mitaka-1.0
   path: roles/

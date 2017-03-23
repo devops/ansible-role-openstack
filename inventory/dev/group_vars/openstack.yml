@@ -1,5 +1,7 @@
 ---
 
+openstack_host_upgrade: False
+
 ## database
 openstack_db_host: "{{ openstack_controller_host }}"
 openstack_db_root_user: "{{ mariadb_users[0].name }}"
@@ -7,8 +9,13 @@ openstack_db_root_password: "{{ mariadb_users[0].password }}"
 
 ## network
 openstack_admin_vip: "{{ openstack_controller_host }}"
+
 openstack_internal_vip: "{{ openstack_controller_host }}"
-openstack_public_vip: "172.23.40.11"
+openstack_internal_net: "10.0.1.0"
+openstack_internal_netmask: "24"
+
+openstack_public_vip: "172.23.62.10"
+openstack_public_netmask: "24"
 
 ## memcached
 memcached_port: 11211
@@ -36,26 +43,22 @@ openstack_hacluster_password: "openstack"
 
 # openstack-common
 openstack_repos:
-  - name: centos-openstack-liberty
-    description: CentOS-7 - OpenStack liberty
-    baseurl: http://mirrors.aliyun.com/centos/7/cloud/x86_64/openstack-liberty/
+  - name: centos-openstack-mitaka
+    description: CentOS-7 - OpenStack mitaka
+    baseurl: http://mirrors.aliyun.com/centos/7/cloud/$basearch/openstack-mitaka/
+    gpgcheck: no
+  - name: centos-ceph-hammer
+    description: CentOS-$releasever - Ceph Hammer
+    baseurl: http://mirrors.aliyun.com/centos/$releasever/storage/$basearch/ceph-hammer/
+    gpgcheck: no
+  - name: centos-qemu-ev
+    description: CentOS-$releasever - QEMU EV
+    baseurl: http://mirrors.aliyun.com/centos/$releasever/virt/$basearch/kvm-common/
     gpgcheck: no
 
-## ceph
+## nova
+openstack_libvirt_secret_uuid: "{{ 10000 | random | to_uuid }}"
 
-ceph_repo_baseurl: "http://mirrors.aliyun.com/ceph/rpm-firefly/el7/"
-ceph_fsid: "cc546e6b-52ab-456b-8283-adff1cd61bce"
-openstack_keys:
-  - { name: glance, owner: "glance" }
-  - { name: cinder, owner: "cinder" }
-  - { name: cinder-backup, owner: "cinder" }
-
-openstack_libvirt_secret_uuid: "c27421a6-c4ce-4236-b96c-e4ac19c53a7d"
-
-# openstack controller && compute
-openstack_internal_net: "10.0.1.0"
-openstack_internal_netmask: "24"
-openstack_public_netmask: "24"
 
 ## auth env
 token_auth_env:

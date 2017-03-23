@@ -1,6 +1,6 @@
 ---
 # Galera MariaDB
-mariadb_repo: False
+mariadb_repo: "False"
 galera_wsrep_cluster_address: ["{{ hostvars[groups['galera'][0]]['mgmt_ip'] }}", "{{ hostvars[groups['galera'][1]]['mgmt_ip'] }}", "{{ hostvars[groups['galera'][2]]['mgmt_ip'] }}"]
 galera_bootstrap_node: "{{ hostvars[groups['galera'][0]].inventory_hostname }}"
 mariadb_root_username: root

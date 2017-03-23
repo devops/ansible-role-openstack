@@ -1,0 +1,6 @@
+---
+
+# RabbitMQ
+rabbitmq_cluster: False
+rabbitmq_cluster_master: "{{ hostvars[groups['rabbitmq'][0]]['ansible_hostname'] }}"
+

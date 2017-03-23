@@ -14,23 +14,20 @@ network_bond_interfaces:
     address: "{{ sp_ip }}"
     bond_mode: 1
     bond_slaves: [eth1]
-  - device: bond2
-    bootproto: static
-    address: "{{ sc_ip }}"
-    bond_mode: 1
-    bond_slaves: [eth2]
+#  - device: bond2
+#    bootproto: static
+#    address: "{{ sc_ip }}"
+#    bond_mode: 1
+#    bond_slaves: [eth2]
 
 # ceph-common
 ceph_repo_enable: True
-ceph_repo_baseurl: "http://mirrors.aliyun.com/ceph/rpm-firefly/el7/"
 
-ceph_cluster_name: "ceph"
-ceph_fsid: "cc546e6b-52ab-456b-8283-adff1cd61bce"
+#ceph_cluster_network: "10.0.3.0/24"
+#cep_mon_host: "{{ hostvars[groups['ceph-mon'][0]]['sp_ip'] }}, {{ hostvars[groups['ceph-mon'][1]]['sp_ip'] }}, {{ hostvars[groups['ceph-mon'][2]]['sp_ip'] }}"
 
-ceph_cluster_network: "10.0.3.0/24"
-cep_mon_host: "{{ hostvars[groups['ceph-mon'][0]]['sp_ip'] }}, {{ hostvars[groups['ceph-mon'][1]]['sp_ip'] }}, {{ hostvars[groups['ceph-mon'][2]]['sp_ip'] }}"
 # openstack
-openstack_config: True
+ceph_openstack_config: True
 
 # Monitor options
 

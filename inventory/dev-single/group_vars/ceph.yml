@@ -9,19 +9,12 @@ network_ethernet_interfaces:
   - device: eth1
     bootproto: static
     address: "{{ sp_ip }}"
-  - device: eth2
-    bootproto: static
-    address: "{{ sc_ip }}"
 
 # ceph-common
 ceph_repo_enable: True
-ceph_repo_baseurl: "http://mirrors.aliyun.com/ceph/rpm-firefly/el7/"
-
-ceph_cluster_name: "ceph"
-ceph_fsid: "cc546e6b-52ab-456b-8283-adff1cd61bce"
 
 # openstack
-openstack_config: True
+ceph_openstack_config: True
 
 # Monitor options
 

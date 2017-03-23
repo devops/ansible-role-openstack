@@ -15,3 +15,26 @@ cinder_rabbitmq_vhost: '/cinder'
 # cinder keystone
 cinder_keystone_user: "cinder"
 cinder_keystone_password: "cinder"
+
+# cinder config
+cinder_config:
+  - { section: "database", param: "connection", value: "mysql+pymysql://{{ cinder_db_user }}:{{ cinder_db_password }}@{{ cinder_db_host }}/{{ cinder_db_name }}" }
+  - { section: "DEFAULT", param: "rpc_backend", value: "{{ cinder_rpc_backend }}" }
+  - { section: "DEFAULT", param: "auth_strategy", value: "{{ cinder_auth_strategy }}" }
+  - { section: "DEFAULT", param: "my_ip", value: "{{ cinder_my_ip }}" }
+  - { section: "DEFAULT", param: "osapi_volume_listen", value: "{{ cinder_osapi_volume_listen }}" }
+  - { section: "keystone_authtoken", param: "auth_uri", value: "{{ openstack_keystone_auth_uri }}" }
+  - { section: "keystone_authtoken", param: "auth_url", value: "{{ openstack_keystone_auth_url }}" }
+  - { section: "keystone_authtoken", param: "memcached_servers", value: "{{ cinder_memcached_servers }}" }
+  - { section: "keystone_authtoken", param: "auth_type", value: "password" }
+  - { section: "keystone_authtoken", param: "project_domain_name", value: "default" }
+  - { section: "keystone_authtoken", param: "user_domain_name", value: "default" }
+  - { section: "keystone_authtoken", param: "project_name", value: "service" }
+  - { section: "keystone_authtoken", param: "username", value: "{{ cinder_keystone_user }}" }
+  - { section: "keystone_authtoken", param: "password", value: "{{ cinder_keystone_password }}" }
+  - { section: "oslo_concurrency", param: "lock_path", value: "{{ cinder_lock_path }}" }
+  - { section: "keymgr", param: "encryption_auth_url", value: "{{ cinder_encryption_auth_url }}" }
+  - { section: "oslo_messaging_rabbit", param: "rabbit_userid", value: "{{ cinder_rabbitmq_userid }}" }
+  - { section: "oslo_messaging_rabbit", param: "rabbit_password", value: "{{ cinder_rabbitmq_password }}" }
+  - { section: "oslo_messaging_rabbit", param: "rabbit_virtual_host", value: "{{ cinder_rabbitmq_vhost }}" }
+  - { section: "oslo_messaging_rabbit", param: "rabbit_host", value: "{{ cinder_rabbitmq_host }}" }

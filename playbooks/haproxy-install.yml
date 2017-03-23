@@ -1,0 +1,8 @@
+---
+
+- name: Install Haproxy.
+  hosts: haproxy
+  remote_user: root
+  roles:
+    - role: ansible-role-haproxy
+

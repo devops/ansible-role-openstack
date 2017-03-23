@@ -1,0 +1,7 @@
+---
+
+- name: Install and Configure pacemaker
+  hosts: haproxy
+  remote_user: root
+  tasks:
+    - include: openstack-ha.yml

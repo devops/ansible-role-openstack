@@ -1,31 +1,7 @@
 ---
 
-## MariaDB-galera
-- name: Install MariaDB Galera.
-  hosts: galera
-  remote_user: root
-  roles:
-    - role: ansible-role-mariadb-galera
-
-## RabbitMQ
-- name: Install RabbitMQ.
-  hosts: rabbitmq
-  remote_user: root
-  roles:
-    - role: ansible-role-rabbitmq
-
-## Memcached
-- name: Install Memcached.
-  hosts: memcached
-  remote_user: root
-  roles:
-    - role: ansible-role-memcached
-
-## Haproxy
-- name: Install Haproxy.
-  hosts: haproxy
-  remote_user: root
-  roles:
-    - role: ansible-role-haproxy
-  tasks:
-    - include: openstack-ha.yml
+- include: galera-install.yml
+- include: rabbitmq-install.yml
+- include: memcached-install.yml
+- include: haproxy-install.yml
+- include: ha-install.yml

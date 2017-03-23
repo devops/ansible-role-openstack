@@ -27,6 +27,34 @@
         - inventory_hostname == groups['nova_controller'][0]
         - groups['rabbitmq']|length > 0
 
+    - name: Setup DB for openstack nova api.
+      mysql_db:
+        name: "{{ nova_api_db_name }}"
+        collation: "{{ nova_api_db_collation | default('utf8_general_ci') }}"
+        encoding: "{{ nova_api_db_encoding | default('utf8') }}"
+        login_host: "{{ openstack_db_host }}"
+        login_user: "{{ openstack_db_root_user | default('root') }}"
+        login_password: "{{ openstack_db_root_password }}"
+        state: present
+      when: inventory_hostname == groups['nova_controller'][0]
+      delegate_to: "{{ groups['galera'][0] }}"
+
+    - name: Setup DB User for openstack nova api.
+      mysql_user:
+        name: "{{ nova_api_db_user }}"
+        password: "{{ nova_api_db_password }}"
+        host: "{{ item }}"
+        priv: "{{ nova_api_db_priv | default('*.*:ALL') }}"
+        login_host: "{{ openstack_db_host }}"
+        login_user: "{{ openstack_db_root_user | default('root') }}"
+        login_password: "{{ openstack_db_root_password }}"
+        state: present
+      with_items:
+        - localhost
+        - "%"
+      when: inventory_hostname == groups['nova_controller'][0]
+      delegate_to: "{{ groups['galera'][0] }}"
+
     - name: Setup DB for openstack nova.
       mysql_db:
         name: "{{ nova_db_name }}"
@@ -54,5 +82,6 @@
         - "%"
       when: inventory_hostname == groups['nova_controller'][0]
       delegate_to: "{{ groups['galera'][0] }}"
+
   roles:
     - role: "ansible-role-openstack-nova"

@@ -18,7 +18,7 @@
     - role: ansible-role-chrony
 
 ## openstack-common
-- name: OpenStack Controller Node Base Configure.
+- name: OpenStack Compute Node Base Configure.
   hosts: compute
   remote_user: root
   roles:

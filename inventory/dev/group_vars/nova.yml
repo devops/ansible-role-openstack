@@ -6,6 +6,10 @@ nova_db_name: "nova"
 nova_db_user: "nova"
 nova_db_password: "nova"
 
+nova_api_db_name: "nova_api"
+nova_api_db_user: "nova"
+nova_api_db_password: "nova"
+
 # nova rabbitmq
 nova_rabbitmq_host: "{{ openstack_controller_host }}"
 nova_rabbitmq_userid: 'nova'

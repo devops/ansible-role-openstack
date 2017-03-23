@@ -10,7 +10,7 @@ network_ethernet_interfaces:
     address: "{{ mgmt_ip }}"
   - device: eth2
     bootproto: static
-  - device: eth2.2504
+  - device: eth2.2562
     bootproto: static
     address: "{{ public_ip }}"
     vlan: yes

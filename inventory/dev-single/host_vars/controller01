@@ -1,5 +1,5 @@
 ---
-host_name: controller01-production
+host_name: controller01-dev
 admin_ip: 172.23.40.11
 admin_ip_gateway: 172.23.40.254
 public_ip: 172.23.62.11

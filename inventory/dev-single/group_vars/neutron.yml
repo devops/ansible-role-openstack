@@ -20,7 +20,6 @@ neutron_keystone_password: "neutron"
 neutron_network_lxb: True
 neutron_network_ovs: False
 neutron_network_option: "provider"
-neutron_public_interface: "eth1"
 
 # neutron config
 neutron_metadata_proxy_shared_secret: "openstack"

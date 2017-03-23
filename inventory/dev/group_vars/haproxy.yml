@@ -41,6 +41,7 @@ haproxy_stats:
     realm: Welcome\ to\ haproxy\ monitor
     auth: admin:admin
     refresh: 5s
+  mode: http
 
 haproxy_listen:
   - name: "dashboard_cluster_80"
@@ -72,7 +73,7 @@ haproxy_listen:
       - "{{ openstack_controller_host }}:3306"
     balance: "source"
     options:
-      - httpchk
+      - mysql-check
     servers:
       - name: "controller1"
         ip: "{{ hostvars.controller01.mgmt_ip }}"

@@ -7,9 +7,11 @@
   tasks:
     - name: Generate ssh key for nova user.
       shell: |
-        mkdir -p fetch/compute
-        rm -rf fetch/compute/id_rsa*
-        ssh-keygen -N '' -q -f fetch/compute/id_rsa
+        mkdir -p "{{ inventory_dir }}/fetch/compute"
+        rm -rf "{{ inventory_dir }}/fetch/compute/id_rsa*"
+        ssh-keygen -N '' -q -f "{{ inventory_dir }}/fetch/compute/id_rsa"
+      args:
+        creates: "{{ inventory_dir }}/fetch/compute/id_rsa"
 
 - name: Installation and setup of nova compute.
   hosts: nova_compute

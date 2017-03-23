@@ -13,8 +13,15 @@ base_nameserver_servers:
 chrony_config_server:
   - ntp.fudan.edu.cn
   - ntp.api.bz
+
 chrony_config_allow:
   - 172.23.40/24
 
 # sshd
 sshd_setup_firewall: false
+
+# ceph
+ceph_cluster_name: "ceph"
+ceph_fsid: "{{ ceph_cluster_name | to_uuid }}"
+ceph_repo_baseurl: "http://mirrors.aliyun.com/ceph/rpm-firefly/el7/"
+

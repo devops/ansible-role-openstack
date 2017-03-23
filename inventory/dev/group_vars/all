@@ -1,9 +1,9 @@
 ---
 # repo-lan
 repo_lan_repos:
-  - { name: "base", baseurl: "http://172.23.11.2/repo/openstack/centos/7.2/os/x86_64/" }
-  - { name: "extras", baseurl: "http://172.23.11.2/repo/centos/7.2/extras/x86_64/" }
-  - { name: "epel", baseurl: "http://172.23.11.2/repo/openstack/epel/7/x86_64/" }
+  - { name: "base", baseurl: "http://mirrors.aliyun.com/centos/7.2.1511/os/x86_64/" }
+  - { name: "extras", baseurl: "http://mirrors.aliyun.com/centos/7.2.1511/extras/x86_64/" }
+  - { name: "epel", baseurl: "http://mirrors.aliyun.com/epel/7/x86_64/" }
 
 # base
 base_nameserver_servers:
@@ -14,7 +14,12 @@ chrony_config_server:
   - cn.pool.ntp.org
 
 chrony_config_allow:
-  - 172.23.192/18
+  - 172.23.40/24
 
 # sshd
 sshd_setup_firewall: false
+
+# ceph
+ceph_cluster_name: "ceph"
+ceph_fsid: "{{ ceph_cluster_name | to_uuid }}"
+ceph_repo_baseurl: "http://mirrors.aliyun.com/ceph/rpm-firefly/el7/"

@@ -1,37 +1,34 @@
 ---
 
-# - include: openstack-controller-hosts-setup.yml
-#
-## MySQL Database
+# Init openstack host
+- include: setup-hosts.yml
+
+# MySQL Database
 - name: Install MySQL Database.
   hosts: galera
   remote_user: root
   roles:
     - role: ansible-role-mysql
 
-## RabbitMQ
-- name: Install RabbitMQ.
-  hosts: rabbitmq
-  remote_user: root
-  roles:
-    - role: ansible-role-rabbitmq
+# RabbitMQ
+- include: rabbitmq-install.yml
 
-## Memcached
-- name: Install Memcached.
-  hosts: memcached
-  remote_user: root
-  roles:
-    - role: ansible-role-memcached
+# Memcached
+- include: memcached-install.yml
 
-## Haproxy
-- name: Install Haproxy.
+# HAproxy
+- include: haproxy-install.yml
+
+# VIP
+- name: Install and Configure VIP.
   hosts: haproxy
   remote_user: root
   pre_tasks:
     - name: Configure ip
-      shell: ip addr add 10.0.1.10/24 dev eth1
+      shell: |
+        ip addr add {{ openstack_internal_vip }}/{{ openstack_internal_netmask }} dev {{ openstack_internal_interface }}
+        ip addr add {{ openstack_public_vip }}/{{ openstack_public_netmask }} dev {{ openstack_public_interface }}.{{ openstack_public_vlan }}
       ignore_errors: True
-  roles:
-    - role: ansible-role-haproxy
 
+# setup openstack
 - include: setup-openstack.yml

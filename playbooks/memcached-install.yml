@@ -1,0 +1,7 @@
+---
+
+- name: Install Memcached.
+  hosts: memcached
+  remote_user: root
+  roles:
+    - role: ansible-role-memcached

@@ -1,5 +1,7 @@
 ---
 
+openstack_host_upgrade: False
+
 ## database
 openstack_db_host: "{{ openstack_controller_host }}"
 openstack_db_root_user: "{{ mysql_users[0].name }}"
@@ -7,12 +9,20 @@ openstack_db_root_password: "{{ mysql_users[0].password }}"
 
 ## network
 openstack_admin_vip: "{{ openstack_controller_host }}"
+
 openstack_internal_vip: "{{ openstack_controller_host }}"
-openstack_public_vip: "192.168.8.11"
+openstack_internal_net: "10.0.1.0"
+openstack_internal_netmask: "24"
+openstack_internal_interface: eth1
+
+openstack_public_vip: "172.23.62.10"
+openstack_public_netmask: "24"
+openstack_public_interface: eth2
+openstack_public_vlan: 2562
+
 
 ## memcached
-memcached_listen_ip: "{{ mgmt_ip }}"
-memcached_log_enable: True
+
 memcached_port: 11211
 openstack_memcached_servers: "{% for host in groups['memcached'] %}{{ hostvars[host]['mgmt_ip'] }}:{{ memcached_port }}{% if not loop.last %},{% endif %}{% endfor %}"
 
@@ -30,30 +40,16 @@ openstack_admin_password: "openstack"
 ## other
 openstack_controller_host: "10.0.1.10"
 
-
-
 # openstack-common
-openstack_repos:
-  - name: centos-openstack-liberty
-    description: CentOS-7 - OpenStack liberty
-    baseurl: http://mirrors.aliyun.com/centos/7/cloud/x86_64/openstack-liberty/
-    gpgcheck: no
+#openstack_repos:
+#  - name: centos-openstack-mitaka
+#    baseurl: http://mirrors.aliyun.com/centos/7/cloud/$basearch/openstack-mitaka/
+#    gpgcheck: no
 
-## ceph
 
-ceph_repo_baseurl: "http://mirrors.aliyun.com/ceph/rpm-firefly/el7/"
-ceph_fsid: "cc546e6b-52ab-456b-8283-adff1cd61bce"
-openstack_keys:
-  - { name: glance, owner: "glance" }
-  - { name: cinder, owner: "cinder" }
-  - { name: cinder-backup, owner: "cinder" }
 
-openstack_libvirt_secret_uuid: "c27421a6-c4ce-4236-b96c-e4ac19c53a7d"
-
-# openstack controller && compute
-openstack_internal_net: "10.0.1.0"
-openstack_internal_netmask: "24"
-openstack_public_netmask: "24"
+## nova
+openstack_libvirt_secret_uuid: "{{ 10000 | random | to_uuid }}"
 
 ## auth env
 token_auth_env:
@@ -64,107 +60,3 @@ token_auth_env:
 ## nova
 nova_keystone_user: "nova"
 nova_keystone_password: "nova"
-
-nova_config:
-  - { section: "database", param: "connection", value: "mysql://{{ nova_db_user }}:{{ nova_db_password }}@{{ nova_db_host }}/{{ nova_db_name }}" }
-  - { section: "DEFAULT", param: "rpc_backend", value: "{{ nova_rpc_backend }}" }
-  - { section: "DEFAULT", param: "auth_strategy", value: "{{ nova_auth_strategy }}" }
-  - { section: "DEFAULT", param: "my_ip", value: "{{ nova_my_ip }}" }
-  - { section: "DEFAULT", param: "network_api_class", value: "{{ nova_network_api_class }}" }
-  - { section: "DEFAULT", param: "security_group_api", value: "{{ nova_security_group_api }}" }
-  - { section: "DEFAULT", param: "linuxnet_interface_driver", value: "{{ nova_linuxnet_interface_driver }}" }
-  - { section: "DEFAULT", param: "firewall_driver", value: "{{ nova_firewall_driver }}" }
-  - { section: "DEFAULT", param: "enabled_apis", value: "{{ nova_enabled_apis }}" }
-  - { section: "DEFAULT", param: "verbose", value: "{{ nova_verbose }}" }
-  - { section: "DEFAULT", param: "memcached_servers", value: "{{ nova_memcached_servers }}" }
-  - { section: "DEFAULT", param: "osapi_compute_listen", value: "{{ nova_osapi_compute_listen }}" }
-  - { section: "DEFAULT", param: "metadata_listen", value: "{{ nova_metadata_listen }}" }
-  - { section: "DEFAULT", param: "novncproxy_host", value: "{{ nova_novncproxy_host }}" }
-  - { section: "DEFAULT", param: "ec2_listen", value: "{{ nova_ec2_listen }}" }
-  - { section: "glance", param: "host", value: "{{ nova_glance_host }}" }
-  - { section: "keystone_authtoken", param: "auth_uri", value: "{{ openstack_keystone_auth_uri }}" }
-  - { section: "keystone_authtoken", param: "auth_url", value: "{{ openstack_keystone_auth_url }}" }
-  - { section: "keystone_authtoken", param: "auth_plugin", value: "password" }
-  - { section: "keystone_authtoken", param: "project_domain_id", value: "default" }
-  - { section: "keystone_authtoken", param: "user_domain_id", value: "default" }
-  - { section: "keystone_authtoken", param: "project_name", value: "service" }
-  - { section: "keystone_authtoken", param: "username", value: "{{ nova_keystone_user }}" }
-  - { section: "keystone_authtoken", param: "password", value: "{{ nova_keystone_password }}" }
-  - { section: "vnc", param: "vncserver_listen", value: '\$my_ip' }
-  - { section: "vnc", param: "vncserver_proxyclient_address", value: '\$my_ip' }
-  - { section: "oslo_concurrency", param: "lock_path", value: "{{ nova_lock_path }}" }
-  - { section: "oslo_messaging_rabbit", param: "rabbit_userid", value: "{{ nova_rabbitmq_userid }}" }
-  - { section: "oslo_messaging_rabbit", param: "rabbit_password", value: "{{ nova_rabbitmq_password }}" }
-  - { section: "oslo_messaging_rabbit", param: "rabbit_virtual_host", value: "{{ nova_rabbitmq_vhost }}" }
-  - { section: "oslo_messaging_rabbit", param: "rabbit_host", value: "{{ nova_rabbitmq_host }}" }
-
-nova_compute_kvm_config:
-  - { section: "DEFAULT", param: "rpc_backend", value: "{{ nova_rpc_backend }}" }
-  - { section: "DEFAULT", param: "auth_strategy", value: "{{ nova_auth_strategy }}" }
-  - { section: "DEFAULT", param: "my_ip", value: "{{ nova_my_ip }}" }
-  - { section: "DEFAULT", param: "network_api_class", value: "{{ nova_network_api_class }}" }
-  - { section: "DEFAULT", param: "security_group_api", value: "{{ nova_security_group_api }}" }
-  - { section: "DEFAULT", param: "linuxnet_interface_driver", value: "{{ nova_linuxnet_interface_driver }}" }
-  - { section: "DEFAULT", param: "firewall_driver", value: "{{ nova_firewall_driver }}" }
-  - { section: "DEFAULT", param: "verbose", value: "{{ nova_verbose }}" }
-  - { section: "DEFAULT", param: "memcached_servers", value: "{{ nova_memcached_servers }}" }
-  - { section: "DEFAULT", param: "cpu_allocation_ratio", value: "{{ nova_cpu_allocation_ratio }}" }
-  - { section: "keystone_authtoken", param: "auth_uri", value: "{{ openstack_keystone_auth_uri }}" }
-  - { section: "keystone_authtoken", param: "auth_url", value: "{{ openstack_keystone_auth_url }}" }
-  - { section: "keystone_authtoken", param: "auth_plugin", value: "password" }
-  - { section: "keystone_authtoken", param: "project_domain_id", value: "default" }
-  - { section: "keystone_authtoken", param: "user_domain_id", value: "default" }
-  - { section: "keystone_authtoken", param: "project_name", value: "service" }
-  - { section: "keystone_authtoken", param: "username", value: "{{ nova_keystone_user }}" }
-  - { section: "keystone_authtoken", param: "password", value: "{{ nova_keystone_password }}" }
-  - { section: "vnc", param: "enabled", value: "{{ nova_vnc_enabled }}" }
-  - { section: "vnc", param: "vncserver_listen", value: "{{ nova_vncserver_listen }}" }
-  - { section: "vnc", param: "vncserver_proxyclient_address", value: '\$my_ip' }
-  - { section: "vnc", param: "novncproxy_base_url", value: "{{ nova_novncproxy_base_url }}" }
-  - { section: "glance", param: "host", value: "{{ nova_glance_host }}" }
-  - { section: "oslo_concurrency", param: "lock_path", value: "{{ nova_lock_path }}" }
-  - { section: "oslo_messaging_rabbit", param: "rabbit_userid", value: "{{ nova_rabbitmq_userid }}" }
-  - { section: "oslo_messaging_rabbit", param: "rabbit_password", value: "{{ nova_rabbitmq_password }}" }
-  - { section: "oslo_messaging_rabbit", param: "rabbit_virtual_host", value: "{{ nova_rabbitmq_vhost }}" }
-  - { section: "oslo_messaging_rabbit", param: "rabbit_host", value: "{{ nova_rabbitmq_host }}" }
-
-# MySQL
-mysql_root_username: root
-mysql_root_password: root
-mysql_users:
-  - { name: "root", host: "%", password: "root", priv: "*.*:GRANT,ALL" }
-mysql_datadir: "/data/mariadb"
-mysql_packages:
-  - mariadb
-  - mariadb-server
-  - mariadb-libs
-mysql_daemon: mariadb
-
-# RabbitMQ
-rabbitmq_cluster: False
-rabbitmq_cluster_master: "{{ hostvars[groups['rabbitmq'][0]]['ansible_hostname'] }}"
-
-
-# cinder
-
-cinder_config:
-  - { section: "database", param: "connection", value: "mysql://{{ cinder_db_user }}:{{ cinder_db_password }}@{{ cinder_db_host }}/{{ cinder_db_name }}" }
-  - { section: "DEFAULT", param: "rpc_backend", value: "{{ cinder_rpc_backend }}" }
-  - { section: "DEFAULT", param: "auth_strategy", value: "{{ cinder_auth_strategy }}" }
-  - { section: "DEFAULT", param: "my_ip", value: "{{ cinder_my_ip }}" }
-  - { section: "DEFAULT", param: "verbose", value: "{{ cinder_verbose }}" }
-  - { section: "DEFAULT", param: "osapi_volume_listen", value: "{{ cinder_osapi_volume_listen }}" }
-  - { section: "keystone_authtoken", param: "auth_uri", value: "{{ openstack_keystone_auth_uri }}" }
-  - { section: "keystone_authtoken", param: "auth_url", value: "{{ openstack_keystone_auth_url }}" }
-  - { section: "keystone_authtoken", param: "auth_plugin", value: "password" }
-  - { section: "keystone_authtoken", param: "project_domain_id", value: "default" }
-  - { section: "keystone_authtoken", param: "user_domain_id", value: "default" }
-  - { section: "keystone_authtoken", param: "project_name", value: "service" }
-  - { section: "keystone_authtoken", param: "username", value: "{{ cinder_keystone_user }}" }
-  - { section: "keystone_authtoken", param: "password", value: "{{ cinder_keystone_password }}" }
-  - { section: "oslo_concurrency", param: "lock_path", value: "{{ cinder_lock_path }}" }
-  - { section: "keymgr", param: "encryption_auth_url", value: "{{ cinder_encryption_auth_url }}" }
-  - { section: "oslo_messaging_rabbit", param: "rabbit_userid", value: "{{ cinder_rabbitmq_userid }}" }
-  - { section: "oslo_messaging_rabbit", param: "rabbit_password", value: "{{ cinder_rabbitmq_password }}" }
-  - { section: "oslo_messaging_rabbit", param: "rabbit_virtual_host", value: "{{ cinder_rabbitmq_vhost }}" }
-  - { section: "oslo_messaging_rabbit", param: "rabbit_host", value: "{{ cinder_rabbitmq_host }}" }

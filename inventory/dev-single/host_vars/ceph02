@@ -3,4 +3,4 @@ host_name: ceph02-dev
 admin_ip: 172.23.40.32
 admin_ip_gateway: 172.23.40.254
 sp_ip: 10.0.2.32
-sc_ip: 10.0.3.32
+sc_ip: 10.0.2.32

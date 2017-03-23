@@ -1,0 +1,8 @@
+---
+# Use standalone MariaDB
+
+mysql_root_username: root
+mysql_root_password: root
+mysql_users:
+  - { name: "root", host: "%", password: "root", priv: "*.*:GRANT,ALL" }
+mysql_datadir: "/data/mariadb"
